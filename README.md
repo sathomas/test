@@ -2,7 +2,7 @@
 
 Simple Test Application to solve the following artificial problem:
 
-## Excercise:
+## Exercise:
 
 ### Part I:
 
