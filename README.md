@@ -2,9 +2,14 @@
 
 Simple Test Application to solve the following artificial problem:
 
-## Exercise:
+Current Build Status: [![Build Status](https://travis-ci.org/sathomas/test.png)](https://travis-ci.org/sathomas/test)
 
-### Part I:
+-----
+## Original Problem Statement
+
+### Exercise
+
+#### Part I
 
 Write a function (either PHP, JS or Python) to lay out a
 series of events on the calendar for a single day.
@@ -61,7 +66,7 @@ Function layOutDay(events) {
 }
 ```
 
-### Part II
+#### Part II
 
 Use your function from Part I to create a web page
 that is styled just like the attached example image with the
