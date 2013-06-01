@@ -1,0 +1,29 @@
+{
+  "name": "test",
+  "version": "0.1.0",
+  "author": "Stephen Thomas <stephen@sathomas.me>",
+  "description": "Simple demonstration app",
+  "scripts": {
+    "test": "mocha"
+  },
+  "dependencies": {
+    "jquery": "1.10.x",
+    "underscore": "1.4.x",
+    "backbone": "1.0.x",
+    "moment": "2.0.x"
+  },
+  "devDependencies": {
+    "mocha": "1.10.x",
+    "chai": "1.6.x",
+    "sinon": "1.7.x",
+    "sinon-chai": "2.4.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sathomas/test/test/git"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=0.10"
+  }
+}

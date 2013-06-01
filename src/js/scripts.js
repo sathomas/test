@@ -6,3 +6,6 @@
 //@codekit-prepend "../vendor/jquery-1.10.1.js"
 //@codekit-prepend "../vendor/underscore.js"
 //@codekit-prepend "../vendor/backbone.js"
+//@codekit-prepend "../vendor/moment.js"
+
+//@codekit-prepend "app.js"

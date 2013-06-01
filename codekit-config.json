@@ -2,10 +2,21 @@
   "CodeKitInfo" : "This is a CodeKit project configuration file. It is designed to sync project settings across multiple machines. Modifying the contents of this file can be a poor life decision if you don't know what you're doing. This file is not useful unless accompanied by the project that created it in CodeKit. For more information, see: http:\/\/incident57.com\/codekit",
   "creatorBuild" : "8300",
   "files" : {
+    "\/test\/vendor\/chai.js" : {
+      "ignoreWasSetByUser" : 1,
+      "ignore" : 1,
+      "hidden" : 1,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/test\/vendor\/chai.js",
+      "outputStyle" : 1,
+      "syntaxCheckerStyle" : 1,
+      "outputAbbreviatedPath" : "\/build\/js\/chai.min.js",
+      "fileType" : 64
+    },
     "\/test\/vendor\/sinon-1.7.1.js" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
-      "hidden" : 0,
+      "ignoreWasSetByUser" : 1,
+      "ignore" : 1,
+      "hidden" : 1,
       "outputPathIsSetByUser" : 0,
       "inputAbbreviatedPath" : "\/test\/vendor\/sinon-1.7.1.js",
       "outputStyle" : 1,
@@ -13,15 +24,15 @@
       "outputAbbreviatedPath" : "\/build\/js\/sinon-1.7.1.min.js",
       "fileType" : 64
     },
-    "\/test\/vendor\/chai.js" : {
+    "\/build\/js\/scripts.min.js" : {
       "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
+      "ignore" : 1,
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/test\/vendor\/chai.js",
+      "inputAbbreviatedPath" : "\/build\/js\/scripts.min.js",
       "outputStyle" : 1,
       "syntaxCheckerStyle" : 1,
-      "outputAbbreviatedPath" : "\/build\/js\/chai.min.js",
+      "outputAbbreviatedPath" : "\/build\/js\/scripts.min.min.js",
       "fileType" : 64
     },
     "\/src\/less\/styles.less" : {
@@ -37,25 +48,14 @@
       "fileType" : 1,
       "debugStyle" : 0
     },
-    "\/build\/js\/scripts.min.js" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 1,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/build\/js\/scripts.min.js",
-      "outputStyle" : 1,
-      "syntaxCheckerStyle" : 1,
-      "outputAbbreviatedPath" : "\/build\/js\/scripts.min.min.js",
-      "fileType" : 64
-    },
     "\/test\/app-test.js" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
+      "ignoreWasSetByUser" : 1,
+      "ignore" : 1,
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
       "inputAbbreviatedPath" : "\/test\/app-test.js",
       "outputStyle" : 1,
-      "syntaxCheckerStyle" : 1,
+      "syntaxCheckerStyle" : 0,
       "outputAbbreviatedPath" : "\/build\/js\/app-test.min.js",
       "fileType" : 64
     },
@@ -79,6 +79,39 @@
       "outputAbbreviatedPath" : "\/build\/js\/scripts.min.js",
       "fileType" : 64
     },
+    "\/src\/vendor\/moment.js" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 1,
+      "hidden" : 1,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/src\/vendor\/moment.js",
+      "outputStyle" : 1,
+      "syntaxCheckerStyle" : 1,
+      "outputAbbreviatedPath" : "\/build\/js\/moment.min.js",
+      "fileType" : 64
+    },
+    "\/test\/vendor\/sinon-chai.js" : {
+      "ignoreWasSetByUser" : 1,
+      "ignore" : 1,
+      "hidden" : 1,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/test\/vendor\/sinon-chai.js",
+      "outputStyle" : 1,
+      "syntaxCheckerStyle" : 1,
+      "outputAbbreviatedPath" : "\/build\/js\/sinon-chai.min.js",
+      "fileType" : 64
+    },
+    "\/src\/vendor\/backbone.js" : {
+      "ignoreWasSetByUser" : 1,
+      "ignore" : 1,
+      "hidden" : 1,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/src\/vendor\/backbone.js",
+      "outputStyle" : 1,
+      "syntaxCheckerStyle" : 1,
+      "outputAbbreviatedPath" : "\/build\/js\/backbone.min.js",
+      "fileType" : 64
+    },
     "\/src\/vendor\/reset.less" : {
       "ignoreWasSetByUser" : 1,
       "ignore" : 1,
@@ -92,43 +125,10 @@
       "fileType" : 1,
       "debugStyle" : 0
     },
-    "\/test\/vendor\/sinon-chai.js" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/test\/vendor\/sinon-chai.js",
-      "outputStyle" : 1,
-      "syntaxCheckerStyle" : 1,
-      "outputAbbreviatedPath" : "\/build\/js\/sinon-chai.min.js",
-      "fileType" : 64
-    },
-    "\/src\/vendor\/backbone.js" : {
-      "ignoreWasSetByUser" : 1,
-      "ignore" : 1,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/src\/vendor\/backbone.js",
-      "outputStyle" : 1,
-      "syntaxCheckerStyle" : 1,
-      "outputAbbreviatedPath" : "\/build\/js\/backbone.min.js",
-      "fileType" : 64
-    },
-    "\/build\/js\/app.min.js" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 1,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/build\/js\/app.min.js",
-      "outputStyle" : 1,
-      "syntaxCheckerStyle" : 1,
-      "outputAbbreviatedPath" : "\/build\/js\/app.min.min.js",
-      "fileType" : 64
-    },
     "\/src\/vendor\/jquery-1.10.1.js" : {
       "ignoreWasSetByUser" : 1,
       "ignore" : 1,
-      "hidden" : 0,
+      "hidden" : 1,
       "outputPathIsSetByUser" : 0,
       "inputAbbreviatedPath" : "\/src\/vendor\/jquery-1.10.1.js",
       "outputStyle" : 1,
@@ -137,8 +137,8 @@
       "fileType" : 64
     },
     "\/src\/js\/app.js" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
+      "ignoreWasSetByUser" : 1,
+      "ignore" : 1,
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
       "inputAbbreviatedPath" : "\/src\/js\/app.js",
@@ -150,7 +150,7 @@
     "\/src\/vendor\/underscore.js" : {
       "ignoreWasSetByUser" : 1,
       "ignore" : 1,
-      "hidden" : 0,
+      "hidden" : 1,
       "outputPathIsSetByUser" : 0,
       "inputAbbreviatedPath" : "\/src\/vendor\/underscore.js",
       "outputStyle" : 1,
@@ -166,17 +166,6 @@
       "inputAbbreviatedPath" : "\/build\/index.html",
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 2048
-    },
-    "\/build\/js\/app-test.min.js" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 1,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/build\/js\/app-test.min.js",
-      "outputStyle" : 1,
-      "syntaxCheckerStyle" : 1,
-      "outputAbbreviatedPath" : "\/build\/js\/app-test.min.min.js",
-      "fileType" : 64
     },
     "\/src\/html\/index.kit" : {
       "ignoreWasSetByUser" : 0,

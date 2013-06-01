@@ -1,2 +1,4 @@
-../src/js/app.js
-app-test.js
+--reporter spec
+--ui bdd
+src/js/app.js
+test/app-test.js

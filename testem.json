@@ -4,6 +4,7 @@
         "src/vendor/jquery-1.10.1.js",
         "src/vendor/underscore.js",
         "src/vendor/backbone.js",
+        "src/vendor/moment.js",
         "test/vendor/chai.js",
         "test/vendor/sinon-chai.js",
         "test/vendor/sinon-1.6.0.js",
