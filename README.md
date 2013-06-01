@@ -1,15 +1,23 @@
-# test
+# Test &nbsp;&nbsp;[![Build Status](https://travis-ci.org/sathomas/test.png)](https://travis-ci.org/sathomas/test)
 
-Simple Test Application to solve the following artificial problem:
+This is a simple demonstration application inspired by a test problem documented at the bottom of this page. The problem itself isn’t complex enough to warrant a full, production-quality web application, but it does provide a useful example to explore all of the tools and components that might make up a real app. Those tools include:
 
-Current Build Status: [![Build Status](https://travis-ci.org/sathomas/test.png)](https://travis-ci.org/sathomas/test)
+* Javascript MVC framework ([Backbone.js](http://backbonejs.org))
+* Full lint testing (using [JS Hint](http://www.jshint.com))
+* Test-Driven Development configuration (in browser via [Test’em](https://github.com/airportyh/testem))
+* All unit tests reusable from command line (with [mocha](http://visionmedia.github.io/mocha/) and [node.js](http://nodejs.org))
+* Continuous integration runs all tests automatically on repository update (using [Travis CI](https://travis-ci.org)); real-time status in title of this document
+* Style sheets developed using CSS preprocessor ([LESS](http://lesscss.org))
+* HTML5 with semantic markup but backwards compatible with legacy browsers
+* Full accessibility
+* Responsive design supporting viewports from smartphone to desktop
+* Production-ready builds (concatenated and minified CSS and Javascript)
 
------
+------
+
 ## Original Problem Statement
 
-### Exercise
-
-#### Part I
+### Part I
 
 Write a function (either PHP, JS or Python) to lay out a
 series of events on the calendar for a single day.
@@ -66,7 +74,7 @@ Function layOutDay(events) {
 }
 ```
 
-#### Part II
+### Part II
 
 Use your function from Part I to create a web page
 that is styled just like the attached example image with the
