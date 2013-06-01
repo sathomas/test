@@ -10,9 +10,9 @@ if (typeof exports !== 'undefined' && this.exports !== exports) {
     var sinon = require("sinon");
     chai.use(require("sinon-chai"));
     // simulated DOM
-    var jsdom  = require("jsdom").jsdom;
-    var doc = jsdom("<html><body></body></html>");
-    global.window = doc.createWindow();
+    // var jsdom  = require("jsdom").jsdom;
+    // var doc = jsdom("<html><body></body></html>");
+    // global.window = doc.createWindow();
     // third-party libraries used in the test code
     var moment = require("moment");
 }
