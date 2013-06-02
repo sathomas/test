@@ -15,6 +15,7 @@ if (typeof exports !== 'undefined' && this.exports !== exports) {
     // shortcuts
     var $ = jQuery;
     var _ = Underscore;
+    Backbone.$ = jQuery;
 }
 
 /*
@@ -52,30 +53,71 @@ myApp.Event = Backbone.Model.extend({
 });
 
 /*
-* -----------------------------------------------------------
-*   View of Event as a List Item
-* -----------------------------------------------------------
-*/
+ * -----------------------------------------------------------
+ *   View of Event as a List Item
+ * -----------------------------------------------------------
+ */
 
-// myApp.EventAsListItem = Backbone.View.extend({
-//     tagName:  "li",
-//     template: _.template(
-//         "<span class='event-times'>"
-//       +    "<time datetime='<% start.format(\'YYYY-MM-DD HH:mm\') %>'>"
-//       +        "<% start.format('h:mm:ss a') %>"
-//       +    "</time>"
-//       +    " to "
-//       +    "<time datetime='<% end.format(\'YYYY-MM-DD HH:mm\') %>'>"
-//       +        "<% end.format('h:mm:ss a') %>"
-//       +    "</time>"
-//       + "</span>"
-//       + ": "
-//       + "<span class='event-title'>"
-//       +     "<%= title %>"
-//       + "</span>"
-//       + " at "
-//       + "<span class='event-location'>"
-//       +     "<%= location %>"
-//       + "</span>"
-//     ),
-// });
+myApp.EventAsListItem = Backbone.View.extend({
+    tagName:  "li",
+    className: "event",
+    template: _.template(
+        "<span class='event-times'>"
+      +    "<time class='start-time' datetime='<% print(start.format(\'YYYY-MM-DD HH:mm\')) %>'>"
+      +        "<% print(start.format('h:mm a')) %>"
+      +    "</time>"
+      +    " to "
+      +    "<time class='end-time' datetime='<% print(end.format(\'YYYY-MM-DD HH:mm\')) %>'>"
+      +        "<% print(end.format('h:mm a')) %>"
+      +    "</time>"
+      + "</span>"
+      + ": "
+      + "<span class='event-title'>"
+      +     "<%= title %>"
+      + "</span>"
+      + " at "
+      + "<span class='event-location'>"
+      +     "<%= location %>"
+      + "</span>"
+    ),
+    render: function () {
+        this.$el.html(this.template(this.model.attributes));
+        return this;
+    }
+});
+
+/*
+ * -----------------------------------------------------------
+ *   Events Collection
+ * -----------------------------------------------------------
+ */
+
+myApp.Events = Backbone.Collection.extend({
+    model: myApp.Event
+})
+
+/*
+ * -----------------------------------------------------------
+ *   View of Events as an Unordered List
+ * -----------------------------------------------------------
+ */
+
+myApp.EventsAsList = Backbone.View.extend({
+    tagName: "ul",
+    className: "events",
+    initialize: function() {
+        this.collection.on("add", this.addOne, this);
+    },
+    render: function() {
+        this.addAll();
+        return this;
+    },
+    addAll: function() {
+        this.collection.each(this.addOne, this);
+    },
+    addOne: function(event) {
+        var item = new myApp.EventAsListItem({model: event});
+        item.render();
+        this.$el.append(item.render().el);
+    }
+});

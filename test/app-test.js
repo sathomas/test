@@ -9,11 +9,10 @@ if (typeof exports !== 'undefined' && this.exports !== exports) {
     var chai = require("chai");
     var sinon = require("sinon");
     chai.use(require("sinon-chai"));
-    // simulated DOM
-    // var jsdom  = require("jsdom").jsdom;
-    // var doc = jsdom("<html><body></body></html>");
-    // global.window = doc.createWindow();
+
     // third-party libraries used in the test code
+    var jQuery = require("jquery");
+    var $ = jQuery;
     var moment = require("moment");
 }
 
@@ -44,26 +43,105 @@ describe("Event Model", function(){
         })
     })
 })
-//
-// describe("Event List Item View", function() {
-//     beforeEach(function(){
-//         this.event = new myApp.Event({
-//             title:    "Title",
-//             location: "Location",
-//             start:    moment("12-25-2012 10:00", "MM-DD-YYYY HH:mm"),
-//             end:      moment("12-25-2012 11:00", "MM-DD-YYYY HH:mm")
-//         });
-//         this.item = new myApp.EventAsListItem({model: this.event});
-//         this.save_stub = sinon.stub(this.event, "save");
-//     })
-//     afterEach(function() {
-//         this.save_stub.restore();
-//     })
-//     it("render() should return the view object", function() {
-//         this.item.render().should.equal(this.item);
-//     });
-//     it("should render as a list item", function() {
-//         this.item.render().el.nodeName.should.equal("LI");
-//     })
-// })
+
+describe("Event List Item View", function() {
+    beforeEach(function() {
+        this.event = new myApp.Event({
+            title:    "Title",
+            location: "Location",
+            start:    moment("12-25-2012 10:00", "MM-DD-YYYY HH:mm"),
+            end:      moment("12-25-2012 11:00", "MM-DD-YYYY HH:mm")
+        });
+        this.item = new myApp.EventAsListItem({model: this.event});
+    })
+    it("render() should return the view object", function() {
+        this.item.render().should.equal(this.item);
+    })
+    describe("Template", function() {
+        beforeEach(function(){
+            this.item.render();
+        })
+        it("should render as a list item", function() {
+            this.item.el.nodeName.should.equal("LI");
+        })
+        describe("Event Times", function() {
+            it("should include times for the event", function() {
+                this.item.$el.find("span.event-times").length.should.equal(1);
+            })
+            describe("Start Time", function() {
+                it("should include the start time", function() {
+                    this.item.$el.find("span.event-times time.start-time").length.should.equal(1);
+                })
+                it("should have the correct start time", function() {
+                    this.item.$el.find("time.start-time").text().should.equal("10:00 am");
+                })
+                it("should the ISO-formatted start time as a datetime attribute", function() {
+                    this.item.$el.find("time.start-time").attr("datetime").should.equal("2012-12-25 10:00");
+                })
+            })
+            describe("End Time", function() {
+                it("should include the end time", function() {
+                    this.item.$el.find("span.event-times time.end-time").length.should.equal(1);
+                })
+                it("should have the correct end time", function() {
+                    this.item.$el.find("time.end-time").text().should.equal("11:00 am");
+                })
+                it("should the ISO-formatted end time as a datetime attribute", function() {
+                    this.item.$el.find("time.end-time").attr("datetime").should.equal("2012-12-25 11:00");
+                })
+            })
+        })
+        describe("Event Title", function() {
+            it("should include the event title", function() {
+                this.item.$el.find("span.event-title").length.should.equal(1);
+            })
+            it("should have the correct title", function() {
+                this.item.$el.find("span.event-title").text().should.equal("Title");
+            })
+        })
+        describe("Event Location", function() {
+            it("should include the event location", function() {
+                this.item.$el.find("span.event-location").length.should.equal(1);
+            })
+            it("should have the correct title", function() {
+                this.item.$el.find("span.event-location").text().should.equal("Location");
+            })
+        })
+    })
+})
+
+describe("Events Collection", function() {
+    it("should accept direct initialization of models", function() {
+        this.events = new myApp.Events([
+            {start: moment("12-25-2012 09:30", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 11:30", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
+            {start: moment("12-25-2012 18:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 19:00", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
+            {start: moment("12-25-2012 18:20", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 19:20", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
+            {start: moment("12-25-2012 19:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 20:20", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"}
+        ]);
+        this.events.length.should.equal(4);
+    })
+})
+
+describe("Events List View", function() {
+    beforeEach(function(){
+        this.events = new myApp.Events([
+            {start: moment("12-25-2012 09:30", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 11:30", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
+            {start: moment("12-25-2012 18:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 19:00", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
+            {start: moment("12-25-2012 18:20", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 19:20", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
+            {start: moment("12-25-2012 19:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 20:20", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"}
+        ]);
+        this.list = new myApp.EventsAsList({collection: this.events});
+    })
+    it("render() should return the view object", function() {
+        this.list.render().should.equal(this.list);
+    });
+    it("should render as an unordered list", function() {
+        this.list.render().el.nodeName.should.equal("UL");
+    })
+    it("should include list items for all models in collection", function() {
+        this.list.render();
+        this.list.$el.find("li").should.have.length(4);
+    })
+})
+
 
