@@ -1,4 +1,6 @@
-# Test &nbsp;&nbsp;[![Build Status](https://travis-ci.org/sathomas/test.png)](https://travis-ci.org/sathomas/test)
+# Test
+
+Real-time status: [![Build Status](https://travis-ci.org/sathomas/test.png)](https://travis-ci.org/sathomas/test)
 
 This is a simple demonstration application inspired by a test problem documented at the bottom of this page. The problem itself isn’t complex enough to warrant a full, production-quality web application, but it does provide a useful example to explore all of the tools and components that might make up a real app. Those tools include:
 
@@ -6,7 +8,7 @@ This is a simple demonstration application inspired by a test problem documented
 * Full lint testing (using [JS Hint](http://www.jshint.com))
 * Test-Driven Development configuration (in browser via [Test’em](https://github.com/airportyh/testem))
 * All unit tests reusable from command line (with [mocha](http://visionmedia.github.io/mocha/) and [node.js](http://nodejs.org))
-* Continuous integration runs all tests automatically on repository update (using [Travis CI](https://travis-ci.org)); real-time status in title of this document
+* Continuous integration runs all tests automatically on repository update (using [Travis CI](https://travis-ci.org))
 * Style sheets developed using CSS preprocessor ([LESS](http://lesscss.org))
 * HTML5 with semantic markup but backwards compatible with legacy browsers
 * Full accessibility
