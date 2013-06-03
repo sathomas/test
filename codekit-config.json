@@ -37,17 +37,6 @@
       "fileType" : 1,
       "debugStyle" : 0
     },
-    "\/build\/js\/scripts.min.js" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 1,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/build\/js\/scripts.min.js",
-      "outputStyle" : 1,
-      "syntaxCheckerStyle" : 1,
-      "outputAbbreviatedPath" : "\/build\/js\/scripts.min.min.js",
-      "fileType" : 64
-    },
     "\/test\/app-test.js" : {
       "ignoreWasSetByUser" : 1,
       "ignore" : 1,
@@ -59,6 +48,17 @@
       "outputAbbreviatedPath" : "\/build\/js\/app-test.min.js",
       "fileType" : 64
     },
+    "\/build\/js\/scripts.min.js" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 1,
+      "hidden" : 0,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/build\/js\/scripts.min.js",
+      "outputStyle" : 1,
+      "syntaxCheckerStyle" : 1,
+      "outputAbbreviatedPath" : "\/build\/js\/scripts.min.min.js",
+      "fileType" : 64
+    },
     "\/build\/css\/styles.min.css" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 1,
@@ -68,29 +68,27 @@
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 16
     },
+    "\/src\/vendor\/moment.js" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 1,
+      "hidden" : 1,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/src\/vendor\/moment.js",
+      "outputStyle" : 1,
+      "syntaxCheckerStyle" : 1,
+      "outputAbbreviatedPath" : "\/build\/js\/moment.min.js",
+      "fileType" : 64
+    },
     "\/src\/js\/scripts.js" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
       "inputAbbreviatedPath" : "\/src\/js\/scripts.js",
-      "outputStyle" : 1,
+      "outputStyle" : 0,
       "syntaxCheckerStyle" : 1,
       "outputAbbreviatedPath" : "\/build\/js\/scripts.min.js",
       "fileType" : 64
-    },
-    "\/src\/vendor\/reset.less" : {
-      "ignoreWasSetByUser" : 1,
-      "ignore" : 1,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/src\/vendor\/reset.less",
-      "outputStyle" : 1,
-      "shouldRunBless" : 0,
-      "outputAbbreviatedPath" : "\/build\/css\/reset.css",
-      "strictImports" : 0,
-      "fileType" : 1,
-      "debugStyle" : 0
     },
     "\/test\/vendor\/sinon-chai.js" : {
       "ignoreWasSetByUser" : 1,
@@ -125,16 +123,18 @@
       "outputAbbreviatedPath" : "\/build\/js\/jquery-1.10.1.min.js",
       "fileType" : 64
     },
-    "\/src\/vendor\/moment.js" : {
-      "ignoreWasSetByUser" : 0,
+    "\/src\/vendor\/reset.less" : {
+      "ignoreWasSetByUser" : 1,
       "ignore" : 1,
-      "hidden" : 1,
+      "hidden" : 0,
       "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/src\/vendor\/moment.js",
+      "inputAbbreviatedPath" : "\/src\/vendor\/reset.less",
       "outputStyle" : 1,
-      "syntaxCheckerStyle" : 1,
-      "outputAbbreviatedPath" : "\/build\/js\/moment.min.js",
-      "fileType" : 64
+      "shouldRunBless" : 0,
+      "outputAbbreviatedPath" : "\/build\/css\/reset.css",
+      "strictImports" : 0,
+      "fileType" : 1,
+      "debugStyle" : 0
     },
     "\/src\/js\/app.js" : {
       "ignoreWasSetByUser" : 1,
@@ -255,7 +255,7 @@
       "proto" : 0,
       "boss" : 0,
       "funcscope" : 0,
-      "jquery" : 1,
+      "jquery" : 0,
       "esnext" : 0,
       "camelcase" : 0,
       "dojo" : 0,
@@ -281,7 +281,7 @@
       "prototypejs" : 0,
       "noarg" : 1,
       "supernew" : 0,
-      "node" : 0,
+      "node" : 1,
       "unused" : 1,
       "debug" : 0,
       "bitwise" : 1,

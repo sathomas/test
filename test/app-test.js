@@ -42,6 +42,41 @@ describe("Event Model", function(){
             (this.event.get("end").isSame(moment(),"minute")).should.be.true;
         })
     })
+    describe("Parsing", function() {
+        beforeEach(function() {
+            this.event = new myApp.Event();
+        })
+        it("should convert minutes since 9:00am to a moment object", function() {
+            var m = this.event.makeMoment(30);
+            m.year().should.equal(moment().year());
+            m.month().should.equal(moment().month());
+            m.date().should.equal(moment().date());
+            m.hour().should.equal(9);
+            m.minutes().should.equal(30);
+            m.seconds().should.equal(0);
+            m.milliseconds().should.equal(0);
+        })
+        it("should convert Unix seconds to a moment object", function() {
+            var m = this.event.makeMoment(moment([2013,1,2,3,4,5,6]).unix());
+            m.year().should.equal(2013);
+            m.month().should.equal(1);
+            m.date().should.equal(2);
+            m.hour().should.equal(3);
+            m.minutes().should.equal(4);
+            m.seconds().should.equal(5);
+            m.milliseconds().should.equal(0);
+        })
+        it("should convert Unix milliseconds to a moment object", function() {
+            var m = this.event.makeMoment(moment([2013,1,2,3,4,5,6]).valueOf());
+            m.year().should.equal(2013);
+            m.month().should.equal(1);
+            m.date().should.equal(2);
+            m.hour().should.equal(3);
+            m.minutes().should.equal(4);
+            m.seconds().should.equal(5);
+            m.milliseconds().should.equal(6);
+        })
+    })
 })
 
 describe("Event List Item View", function() {
