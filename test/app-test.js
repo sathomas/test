@@ -93,7 +93,9 @@ describe("Event List Item View", function() {
             title:    "Title",
             location: "Location",
             start:    moment("12-25-2012 10:00", "MM-DD-YYYY HH:mm"),
-            end:      moment("12-25-2012 11:00", "MM-DD-YYYY HH:mm")
+            end:      moment("12-25-2012 11:00", "MM-DD-YYYY HH:mm"),
+            position: 1,
+            overlap:  2
         });
         this.item = new myApp.EventAsListItem({model: this.event});
     })
@@ -148,6 +150,14 @@ describe("Event List Item View", function() {
             })
             it("should have the correct title", function() {
                 this.item.$el.find("span.event-location").text().should.equal("Location");
+            })
+        })
+        describe("Data Attributes", function() {
+            it("should include the event position", function() {
+                this.item.$el.attr("data-position").should.equal("1");
+            })
+            it("should include the event overlap", function() {
+                this.item.$el.attr("data-overlap").should.equal("2");
             })
         })
     })

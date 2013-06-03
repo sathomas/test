@@ -111,6 +111,8 @@ myApp.EventAsListItem = Backbone.View.extend({
         "</span>"
     ),
     render: function () {
+        this.$el.attr("data-position",this.model.get("position"));
+        this.$el.attr("data-overlap",this.model.get("overlap"));
         this.$el.html(this.template(this.model.attributes));
         return this;
     }
