@@ -44,10 +44,10 @@ describe("Event Model", function(){
             (this.event.get("end").isSame(moment(),"minute")).should.be.true;
         })
         it("should default the position to first (e.g. left-most)",function() {
-            this.event.get("position").should.equal(0);
+            this.event.get("left").should.equal(0);
         })
         it("should default the overlap to none",function() {
-            this.event.get("overlap").should.equal(0);
+            this.event.get("width").should.equal(100);
         })
     })
     describe("Parsing", function() {
@@ -94,8 +94,8 @@ describe("Event List Item View", function() {
             location: "Location",
             start:    moment("12-25-2012 10:00", "MM-DD-YYYY HH:mm"),
             end:      moment("12-25-2012 11:00", "MM-DD-YYYY HH:mm"),
-            position: 1,
-            overlap:  2
+            width:    33,
+            left:     66
         });
         this.item = new myApp.EventAsListItem({model: this.event});
     })
@@ -154,22 +154,27 @@ describe("Event List Item View", function() {
         })
         describe("Data Attributes", function() {
             it("should include the event position", function() {
-                this.item.$el.attr("data-position").should.equal("1");
+                this.item.$el.attr("data-width").should.equal("33%");
             })
             it("should include the event overlap", function() {
-                this.item.$el.attr("data-overlap").should.equal("2");
+                this.item.$el.attr("data-left").should.equal("66%");
             })
         })
+    })
+    it("should update automatically on model changes", function() {
+        this.item.render();
+        this.event.set("title","New Title");
+        this.item.$el.find("span.event-title").text().should.equal("New Title");
     })
 })
 
 describe("Events Collection", function() {
     it("should accept direct initialization of models", function() {
         this.events = new myApp.Events([
-            {start: moment("12-25-2012 09:30", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 11:30", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
-            {start: moment("12-25-2012 18:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 19:00", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
-            {start: moment("12-25-2012 18:20", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 19:20", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
-            {start: moment("12-25-2012 19:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 20:20", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"}
+            {id: 1, start: moment("12-25-2012 09:30", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 11:30", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
+            {id: 2, start: moment("12-25-2012 18:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 19:00", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
+            {id: 3, start: moment("12-25-2012 18:20", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 19:20", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
+            {id: 4, start: moment("12-25-2012 19:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 20:20", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"}
         ]);
         this.events.length.should.equal(4);
     })
@@ -181,8 +186,8 @@ describe("Events Collection", function() {
                 {id: 3, start: moment("12-25-2012 18:20", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 19:20", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
                 {id: 4, start: moment("12-25-2012 19:10", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 20:20", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"}
             ]);
-            this.events.findLayout();
-            _(this.events.models).chain().pluck("attributes").pluck("overlap").value().should.eql([0,1,1,1])
+            this.events.layout("9:00","21:00");
+            _(this.events.models).chain().pluck("attributes").pluck("width").value().should.eql([100,50,50,50])
         })
         it("should not overlap back-to-back events", function() {
             this.events = new myApp.Events([
@@ -190,8 +195,8 @@ describe("Events Collection", function() {
                 {id: 2, start: moment("12-25-2012 18:20", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 19:20", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
                 {id: 3, start: moment("12-25-2012 19:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 20:20", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"}
             ]);
-            this.events.findLayout();
-            _(this.events.models).chain().pluck("attributes").pluck("overlap").value().should.eql([1,1,1])
+            this.events.layout("9:00","21:00");
+            _(this.events.models).chain().pluck("attributes").pluck("width").value().should.eql([50,50,50])
         })
         it("should not overlap different days", function() {
             this.events = new myApp.Events([
@@ -200,24 +205,24 @@ describe("Events Collection", function() {
                 {id: 3, start: moment("12-25-2012 19:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 20:20", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
                 {id: 4, start: moment("12-26-2012 10:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 20:20", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"}
             ]);
-            this.events.findLayout();
-            _(this.events.models).chain().pluck("attributes").pluck("overlap").value().should.eql([1,1,1,0])
+            this.events.layout("9:00","21:00");
+            _(this.events.models).chain().pluck("attributes").pluck("width").value().should.eql([50,50,50,100])
         })
         it("should calculate positions", function() {
             this.events = new myApp.Events([
                 {id: 1, start: moment("12-25-2012 18:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 19:00", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
                 {id: 2, start: moment("12-25-2012 18:20", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 19:20", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"}
             ]);
-            this.events.findLayout();
-            _(this.events.models).chain().pluck("attributes").pluck("position").value().should.eql([0,1])
+            this.events.layout("9:00","21:00");
+            _(this.events.models).chain().pluck("attributes").pluck("left").value().should.eql([0,50])
         })
         it("should position earliest starting events first", function() {
             this.events = new myApp.Events([
                 {id: 1, start: moment("12-25-2012 18:20", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 19:20", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
                 {id: 2, start: moment("12-25-2012 18:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 19:00", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"}
             ]);
-            this.events.findLayout();
-            _(this.events.models).chain().pluck("attributes").pluck("position").value().should.eql([1,0])
+            this.events.layout("9:00","21:00");
+            _(this.events.models).chain().pluck("attributes").pluck("left").value().should.eql([50,0])
         })
         it("should fill in position gaps", function() {
             this.events = new myApp.Events([
@@ -225,8 +230,50 @@ describe("Events Collection", function() {
                 {id: 2, start: moment("12-25-2012 18:20", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 19:20", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
                 {id: 3, start: moment("12-25-2012 19:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 20:20", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"}
             ]);
-            this.events.findLayout();
-            _(this.events.models).chain().pluck("attributes").pluck("position").value().should.eql([0,1,0])
+            this.events.layout("9:00","21:00");
+            _(this.events.models).chain().pluck("attributes").pluck("left").value().should.eql([0,50,0])
+        })
+        it("should calculate event height", function() {
+            this.events = new myApp.Events([
+                {id: 1, start: moment("12-25-2012 12:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 18:00", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"}
+            ]);
+            this.events.layout("9:00","21:00");
+            this.events.at(0).get("height").should.equal(50);
+        })
+        it("should calculate event vertical position", function() {
+            this.events = new myApp.Events([
+                {id: 1, start: moment("12-25-2012 12:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 18:00", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"}
+            ]);
+            this.events.layout("9:00","21:00");
+            this.events.at(0).get("top").should.equal(25);
+        })
+        it("should calculate height for early events", function() {
+            this.events = new myApp.Events([
+                {id: 1, start: moment("12-25-2012 8:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 15:00", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"}
+            ]);
+            this.events.layout("9:00","21:00");
+            this.events.at(0).get("height").should.equal(50);
+        })
+        it("should calculate vertical position for early events", function() {
+            this.events = new myApp.Events([
+                {id: 1, start: moment("12-25-2012 8:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 15:00", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"}
+            ]);
+            this.events.layout("9:00","21:00");
+            this.events.at(0).get("top").should.equal(0);
+        })
+        it("should calculate height for late events", function() {
+            this.events = new myApp.Events([
+                {id: 1, start: moment("12-25-2012 15:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 22:00", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"}
+            ]);
+            this.events.layout("9:00","21:00");
+            this.events.at(0).get("height").should.equal(50);
+        })
+        it("should calculate vertical position for late events", function() {
+            this.events = new myApp.Events([
+                {id: 1, start: moment("12-25-2012 15:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 22:00", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"}
+            ]);
+            this.events.layout("9:00","21:00");
+            this.events.at(0).get("top").should.equal(50);
         })
     })
 })
@@ -234,12 +281,12 @@ describe("Events Collection", function() {
 describe("Events List View", function() {
     beforeEach(function(){
         this.events = new myApp.Events([
-            {start: moment("12-25-2012 09:30", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 11:30", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
-            {start: moment("12-25-2012 18:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 19:00", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
-            {start: moment("12-25-2012 18:20", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 19:20", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
-            {start: moment("12-25-2012 19:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 20:20", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"}
+            {id: 1, start: moment("12-25-2012 09:30", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 11:30", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
+            {id: 2, start: moment("12-25-2012 18:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 19:00", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
+            {id: 3, start: moment("12-25-2012 18:20", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 19:20", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
+            {id: 4, start: moment("12-25-2012 19:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 20:20", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"}
         ]);
-        this.list = new myApp.EventsAsList({collection: this.events});
+        this.list = new myApp.EventsAsList({collection: this.events, date: "2012-12-25"});
     })
     it("render() should return the view object", function() {
         this.list.render().should.equal(this.list);
@@ -248,8 +295,28 @@ describe("Events List View", function() {
         this.list.render().el.nodeName.should.equal("UL");
     })
     it("should include list items for all models in collection", function() {
+        this.list.render().$el.find("li").should.have.length(4);
+    })
+    it("should dynamically add list items as events are added to the collection", function() {
         this.list.render();
-        this.list.$el.find("li").should.have.length(4);
+        this.events.add({
+            id:       5,
+            start:    moment("12-25-2012 19:20", "MM-DD-YYYY HH:mm"),
+            end:      moment("12-25-2012 20:20", "MM-DD-YYYY HH:mm"),
+            title:    "Sample Title",
+            location: "Sample Location"
+        });
+        this.list.$el.find("li").should.have.length(5);
+    })
+    it("should filter models based on date", function() {
+        this.events = new myApp.Events([
+            {id: 1, start: moment("12-25-2012 09:30", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 11:30", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
+            {id: 2, start: moment("12-25-2012 18:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 19:00", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
+            {id: 3, start: moment("12-25-2012 18:20", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 19:20", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
+            {id: 4, start: moment("12-26-2012 19:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 20:20", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"}
+        ]);
+        this.list = new myApp.EventsAsList({collection: this.events, date: "2012-12-25"});
+        this.list.render().$el.find("li").should.have.length(3);
     })
 })
 

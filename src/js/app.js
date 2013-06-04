@@ -49,8 +49,8 @@ myApp.Event = Backbone.Model.extend({
         end:      moment(),  // default end time is now
         title:    "",        // default title is empty string
         location: "",        // default location is empty string
-        position: 0,         // default position is first (e.g. left-most)
-        overlap:  0          // default is no overlaps
+        left:     0,         // default position is first (e.g. left-most)
+        width:    100        // default is no overlaps
     },
     makeMoment: function(num) {
         // Internally, we use the moment.js library to manage
@@ -110,11 +110,17 @@ myApp.EventAsListItem = Backbone.View.extend({
             "<%= location %>" +
         "</span>"
     ),
-    render: function () {
-        this.$el.attr("data-position",this.model.get("position"));
-        this.$el.attr("data-overlap",this.model.get("overlap"));
+    render: function() {
+        this.$el.attr("data-top",this.model.get("top")+"%");
+        this.$el.attr("data-left",this.model.get("left")+"%");
+        this.$el.attr("data-height",this.model.get("height")+"%");
+        this.$el.attr("data-width",this.model.get("width")+"%");
         this.$el.html(this.template(this.model.attributes));
         return this;
+    },
+    initialize: function() {
+        // if the model changes, update the view
+        this.listenTo(this.model, "change", this.render);
     }
 });
 
@@ -138,11 +144,23 @@ myApp.Events = Backbone.Collection.extend({
     url: "api/events.json",
     
     // Calculate the layout positions for the events.
-    findLayout: function() {
+    layout: function(startTime, endTime) {
+        // find start and end time in minutes since midnight
+        var startMins = _((startTime).split(":")).reduce(function(mins, n) {return mins*60+parseInt(n,10);}, 0);
+        var endMins   = _((endTime  ).split(":")).reduce(function(mins, n) {return mins*60+parseInt(n,10);}, 0);
+        var totalMins = endMins - startMins;
+
         // each day is independent
         _.each(this.groupBy(function(event){
             return event.get("start").format("YYYY-MM-DD");
-        }), function(eventList) {
+        }), function(eventList, date) {
+            
+            /*
+             * Create objects to represent the start and end of
+             * the displayed times for the date.
+             */
+            var startDay = moment(date).add("minutes", startMins);
+            var endDay   = moment(date).add("minutes", endMins);
 
             /*
              * Because groupBy() returns an array rather than a real
@@ -354,9 +372,13 @@ myApp.Events = Backbone.Collection.extend({
                     return el.type === "start";
                 }).
                 each(function(el) {
+                    var startDisplay = moment(Math.max(el.start, startDay));
+                    var endDisplay   = moment(Math.min(el.end,   endDay));
                     this.get(el.id).set({
-                        position: el.position,
-                        overlap: el.overlap
+                        width:  Math.floor(100/(el.overlap+1)),
+                        left:   Math.floor((el.position*100)/(el.overlap+1)),
+                        height: Math.floor(100*moment.duration(endDisplay - startDisplay).asMinutes()/totalMins),
+                        top:    Math.floor(100*moment.duration(startDisplay - startDay).asMinutes()/totalMins)
                     });
                 }, this);
 
@@ -376,9 +398,18 @@ myApp.EventsAsList = Backbone.View.extend({
     tagName: "ul",
     className: "events",
     initialize: function() {
+        // a specific date can be included in the options
+        // (in YYYY-MM-DD format); but if none was specified,
+        // default to today
+        this.options.date = (typeof this.options.date === "undefined") ? moment() : moment(this.options.date);
+        // time range can also be specified in options; defaults
+        // to 9:00am to 9:00pm
+        this.options.startTime = this.options.startTime ||  "9:00";
+        this.options.endTime   = this.options.endTime   || "21:00";
         this.collection.on("add", this.addOne, this);
     },
     render: function() {
+        this.$el.empty();
         this.addAll();
         return this;
     },
@@ -386,9 +417,12 @@ myApp.EventsAsList = Backbone.View.extend({
         this.collection.each(this.addOne, this);
     },
     addOne: function(event) {
-        var item = new myApp.EventAsListItem({model: event});
-        item.render();
-        this.$el.append(item.render().el);
+        if (event.get("start").isSame(this.options.date, "day")) {
+            this.collection.layout(this.options.startTime, this.options.endTime);
+            var item = new myApp.EventAsListItem({model: event});
+            item.render();
+            this.$el.append(item.render().el);
+        }
     }
 });
 
@@ -405,7 +439,10 @@ myApp.MainView = Backbone.View.extend({
         return this;
     },
     render: function() {
-        this.list = new myApp.EventsAsList({collection: this.events});
+        this.list = new myApp.EventsAsList({
+            collection: this.events,
+            date: moment().format("YYYY-MM-DD")  // show today's events
+        });
         this.$el.html(this.list.render().el);
         return this;
     }
