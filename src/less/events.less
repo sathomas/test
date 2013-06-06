@@ -1,0 +1,81 @@
+
+// Styles for the event list display.
+
+
+// Default version is desktop
+
+#myApp {
+    margin: 2em auto;
+    width: 90%;
+    font-family: "Trebuchet MS", "Helvetica Neue", Arial, Helvetica, sans-serif;
+    h1 {
+        display: none;
+    }
+    .legend {
+        float: left;
+        position: relative;
+        height: 720px;
+        width: 7em;
+        li {
+            position: absolute;
+            .layout(top);
+        }
+        .major-tick {
+            font-size: 14px;
+            line-height: 16px;
+            right: 0.75em;
+            color: #797979;
+            small {
+                font-size: 12px;
+                color: #B8B8B8;
+            }
+        }
+        .minor-tick {
+            right: 0.75em;
+            color: #B8B8B8;
+            font-size: 12px;
+            line-height: 16px;
+        }
+    }
+    .events-wrapper {
+        float: left;
+        width: 100%;
+        background-color: #F0F0F0;
+        border-left: 1px #A9A9A9 solid;
+        margin-top: 8px;
+        padding: 0 0.625em;
+        max-width: 600px + 20px;
+    }
+    .events {
+        position: relative;
+        height: 720px;
+        .event {
+            position: absolute;
+            .layout(height);
+            .layout(width);
+            .layout(top);
+            .layout(left);
+            background-color: white;
+            border: 1px #B8B8B8 solid;
+            border-left: 3px #6483B4 solid;
+            .event-times {
+                display: none;
+            }
+            .event-title {
+                display: block;
+                color: #6483B4;
+                margin: 2px 5px;
+            }
+            .event-location-prefix {
+                display: none;
+            }
+            .event-location {
+                font-size: 0.9em;
+                line-height: 1.111em;
+                display: block;
+                color: #B8B8B8;
+                margin: 2px 5px;
+            }
+        }
+    }
+}
