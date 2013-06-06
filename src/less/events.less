@@ -3,6 +3,22 @@
 
 
 // Default version is desktop
+// Define key parameters for the display as variables
+
+@height:    720px;    // height of the display area
+@legendWidth: 5em;    // width of the legend
+@maxWidth:  600px;    // max width of the canvas (less legend and gutters)
+@gutter:     10px;    // size of gutters in canvas
+
+// Colors
+
+@legendColor: #797979;
+@legendLightColor: lighten(@legendColor, 20%);
+@eventsBorderColor: #A9A9A9;
+@titleColor: #6483B4;
+@locationColor: @legendLightColor;
+@eventBorderColor: @legendLightColor;
+@eventLeftBorderColor: @titleColor;
 
 #myApp {
     margin: 2em auto;
@@ -14,41 +30,40 @@
     .legend {
         float: left;
         position: relative;
-        height: 720px;
-        width: 7em;
+        top: -0.5em;
+        height: @height;
+        width: @legendWidth;
         li {
             position: absolute;
             .layout(top);
         }
         .major-tick {
-            font-size: 14px;
-            line-height: 16px;
+            font-size: 0.9em;
+            line-height: 1.11em;
             right: 0.75em;
-            color: #797979;
+            color: @legendColor;
             small {
-                font-size: 12px;
-                color: #B8B8B8;
+                font-size: 0.9em;
+                color: @legendLightColor;
             }
         }
         .minor-tick {
             right: 0.75em;
-            color: #B8B8B8;
-            font-size: 12px;
-            line-height: 16px;
+            color: @legendLightColor;
+            font-size: 0.75em;
+            line-height: 1.48em;
         }
     }
     .events-wrapper {
-        float: left;
-        width: 100%;
         background-color: #F0F0F0;
-        border-left: 1px #A9A9A9 solid;
-        margin-top: 8px;
-        padding: 0 0.625em;
-        max-width: 600px + 20px;
+        border-left: 1px @eventsBorderColor solid;
+        margin-left: @legendWidth;
+        padding: 0 @gutter;
+        max-width: @maxWidth + 2*@gutter;
     }
     .events {
         position: relative;
-        height: 720px;
+        height: @height;
         .event {
             position: absolute;
             .layout(height);
@@ -56,14 +71,14 @@
             .layout(top);
             .layout(left);
             background-color: white;
-            border: 1px #B8B8B8 solid;
-            border-left: 3px #6483B4 solid;
+            border: 1px @eventBorderColor solid;
+            border-left: 3px @eventLeftBorderColor solid;
             .event-times {
                 display: none;
             }
             .event-title {
                 display: block;
-                color: #6483B4;
+                color: @titleColor;
                 margin: 2px 5px;
             }
             .event-location-prefix {
@@ -73,8 +88,80 @@
                 font-size: 0.9em;
                 line-height: 1.111em;
                 display: block;
-                color: #B8B8B8;
+                color: @locationColor;
                 margin: 2px 5px;
+            }
+        }
+    }
+}
+
+// Adjust styles for small viewport
+
+@media screen and (max-width: 400px) {
+    #myApp {
+        margin: 0;
+        width: 100%;
+        h1 {
+            width: 100%;
+            height: 44px;
+            line-height: 44px;
+            text-align: center;
+            display: block;
+            border-bottom: 1px @legendLightColor solid;
+            color: @legendColor;
+        }
+        .legend {
+            display: none;
+        }
+        .events-wrapper {
+            background-color: transparent;
+            border-left: none;
+            margin-left: 0;
+            padding: 0;
+        }
+        .events {
+            position: relative;
+            height: auto;
+            .event {
+                position: static;
+                height: auto;
+                min-height: 44px;
+                padding-top: 10px;
+                padding-bottom: 10px;
+                line-height: 1.2em;
+                width: 100% !important;
+                top: 0;
+                left: 0;
+                border: none;
+                border-bottom: 1px @legendLightColor solid;
+                .event-times {
+                    color: @legendColor;
+                    display: block;
+                    margin: 0px 10px;
+                }
+                .event-title {
+                    display: block;
+                    color: @titleColor;
+                    margin: 0px 20px;
+                }
+                .event-location-prefix {
+                    display: inline;
+                    margin: 0px 0px 0px 20px;
+                    color: @locationColor;
+                }
+                .event-location {
+                    font-size: 0.9em;
+                    line-height: 1.111em;
+                    display: inline;
+                    color: @locationColor;
+                    margin: 0;
+                }
+            }
+            li:nth-child(odd) {
+                background-color: white;
+            }
+            li:nth-child(even) {
+                background-color: darken(white, 3%);
             }
         }
     }

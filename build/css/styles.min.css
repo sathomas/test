@@ -8,7 +8,7 @@ blockquote:before,blockquote:after,q:before,q:after{content:'';content:none;}
 table{border-collapse:collapse;border-spacing:0;}
 *{-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box;}
 #myApp{margin:2em auto;width:90%;font-family:"Trebuchet MS","Helvetica Neue",Arial,Helvetica,sans-serif;}#myApp h1{display:none;}
-#myApp .legend{float:left;position:relative;height:720px;width:7em;}#myApp .legend li{position:absolute;}#myApp .legend li[data-top="0%"]{top:0%;}
+#myApp .legend{float:left;position:relative;top:-0.5em;height:720px;width:5em;}#myApp .legend li{position:absolute;}#myApp .legend li[data-top="0%"]{top:0%;}
 #myApp .legend li[data-top="1%"]{top:1%;}
 #myApp .legend li[data-top="2%"]{top:2%;}
 #myApp .legend li[data-top="3%"]{top:3%;}
@@ -109,10 +109,10 @@ table{border-collapse:collapse;border-spacing:0;}
 #myApp .legend li[data-top="98%"]{top:98%;}
 #myApp .legend li[data-top="99%"]{top:99%;}
 #myApp .legend li[data-top="100%"]{top:100%;}
-#myApp .legend .major-tick{font-size:14px;line-height:16px;right:0.75em;color:#797979;}#myApp .legend .major-tick small{font-size:12px;color:#B8B8B8;}
-#myApp .legend .minor-tick{right:0.75em;color:#B8B8B8;font-size:12px;line-height:16px;}
-#myApp .events-wrapper{float:left;width:100%;background-color:#F0F0F0;border-left:1px #A9A9A9 solid;margin-top:8px;padding:0 0.625em;max-width:620px;}
-#myApp .events{position:relative;height:720px;}#myApp .events .event{position:absolute;background-color:white;border:1px #B8B8B8 solid;border-left:3px #6483B4 solid;}#myApp .events .event[data-height="0%"]{height:0%;}
+#myApp .legend .major-tick{font-size:0.9em;line-height:1.11em;right:0.75em;color:#797979;}#myApp .legend .major-tick small{font-size:0.9em;color:#acacac;}
+#myApp .legend .minor-tick{right:0.75em;color:#acacac;font-size:0.75em;line-height:1.48em;}
+#myApp .events-wrapper{background-color:#F0F0F0;border-left:1px #a9a9a9 solid;margin-left:5em;padding:0 10px;max-width:620px;}
+#myApp .events{position:relative;height:720px;}#myApp .events .event{position:absolute;background-color:white;border:1px #acacac solid;border-left:3px #6483b4 solid;}#myApp .events .event[data-height="0%"]{height:0%;}
 #myApp .events .event[data-height="1%"]{height:1%;}
 #myApp .events .event[data-height="2%"]{height:2%;}
 #myApp .events .event[data-height="3%"]{height:3%;}
@@ -517,6 +517,7 @@ table{border-collapse:collapse;border-spacing:0;}
 #myApp .events .event[data-left="99%"]{left:99%;}
 #myApp .events .event[data-left="100%"]{left:100%;}
 #myApp .events .event .event-times{display:none;}
-#myApp .events .event .event-title{display:block;color:#6483B4;margin:2px 5px;}
+#myApp .events .event .event-title{display:block;color:#6483b4;margin:2px 5px;}
 #myApp .events .event .event-location-prefix{display:none;}
-#myApp .events .event .event-location{font-size:0.9em;line-height:1.111em;display:block;color:#B8B8B8;margin:2px 5px;}
+#myApp .events .event .event-location{font-size:0.9em;line-height:1.111em;display:block;color:#acacac;margin:2px 5px;}
+@media screen and (max-width:400px){#myApp{margin:0;width:100%;}#myApp h1{width:100%;height:44px;line-height:44px;text-align:center;display:block;border-bottom:1px #acacac solid;color:#797979;} #myApp .legend{display:none;} #myApp .events-wrapper{background-color:transparent;border-left:none;margin-left:0;padding:0;} #myApp .events{position:relative;height:auto;}#myApp .events .event{position:static;height:auto;min-height:44px;padding-top:10px;padding-bottom:10px;line-height:1.2em;width:100% !important;top:0;left:0;border:none;border-bottom:1px #acacac solid;}#myApp .events .event .event-times{color:#797979;display:block;margin:0px 10px;} #myApp .events .event .event-title{display:block;color:#6483b4;margin:0px 20px;} #myApp .events .event .event-location-prefix{display:inline;margin:0px 0px 0px 20px;color:#acacac;} #myApp .events .event .event-location{font-size:0.9em;line-height:1.111em;display:inline;color:#acacac;margin:0;} #myApp .events li:nth-child(odd){background-color:white;} #myApp .events li:nth-child(even){background-color:#f7f7f7;}}
