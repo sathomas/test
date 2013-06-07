@@ -15,6 +15,8 @@ This is a simple demonstration application inspired by a test problem documented
 * Responsive design supporting viewports from smartphone to desktop
 * Production-ready builds (concatenated and minified CSS and Javascript)
 
+THe bulk of the project is a simple Javascript web app. An annotated walk-through of the app's [source code](http://sathomas.me/test/) is available.
+
 ------
 
 ## Original Problem Statement
