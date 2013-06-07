@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>app.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>app.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>If we&#39;re running in node.js, then we need to manage
+dependencies explicitly. If we&#39;re running in the
+browser, they&#39;ll be in the global namespace.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="keyword">if</span> (<span class="keyword">typeof</span> exports !== <span class="string">'undefined'</span> &amp;&amp; <span class="keyword">this</span>.exports !== exports) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>First start with hird-party libraries.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> jQuery     = require(<span class="string">"jquery"</span>);
+    <span class="keyword">var</span> Underscore = require(<span class="string">"underscore"</span>);
+    <span class="keyword">var</span> Backbone   = require(<span class="string">"backbone"</span>);
+    <span class="keyword">var</span> moment     = require(<span class="string">"moment"</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Include common library shortcuts.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> $ = jQuery;
+    <span class="keyword">var</span> _ = Underscore;
+    Backbone.$ = jQuery;
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Create a root in the global namespace for all
+our models, views, etc. We&#39;re not going for
+originality here.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="keyword">var</span> myApp = myApp  || {};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>And if we&#39;re running in node (i.e. unit testing),
+we need to explicitly put our app in the global
+namespace.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="keyword">if</span> (<span class="keyword">typeof</span> exports !== <span class="string">'undefined'</span> &amp;&amp; <span class="keyword">this</span>.exports !== exports) {
+    global.myApp = myApp;
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <h2>Event Model</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>myApp.Event = Backbone.Model.extend({
+    defaults: {
+        start:    moment(),  <span class="comment">// default start time is now</span>
+        end:      moment(),  <span class="comment">// default end time is now</span>
+        title:    <span class="string">""</span>,        <span class="comment">// default title is empty string</span>
+        location: <span class="string">""</span>,        <span class="comment">// default location is empty string</span>
+        left:     <span class="number">0</span>,         <span class="comment">// default position is first (e.g. left-most)</span>
+        width:    <span class="number">100</span>        <span class="comment">// default is no overlaps</span>
+    },
+    makeMoment: <span class="keyword">function</span>(num) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Internally, we use the moment.js library to manage
+event times. This function converts an input number
+to a moment() object. It handles the unusual format
+returned by the server (minutes since 9:00am) as
+well as distinquishing between the more standard
+formats of seconds or milliseconds since the Unix
+epoch.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">if</span> (num &lt; (<span class="number">60</span>*(<span class="number">24</span>-<span class="number">9</span>))) {
+            <span class="keyword">var</span> now = moment();
+            <span class="keyword">return</span> moment([ now.year(), now.month(), now.date(), <span class="number">9</span>]).add(<span class="string">"minutes"</span>,num);
+        } <span class="keyword">else</span> <span class="keyword">if</span> (num &lt; moment([<span class="number">1970</span>,<span class="number">1</span>,<span class="number">1</span>]).valueOf()) {
+            <span class="keyword">return</span> moment.unix(num);
+        } <span class="keyword">else</span> {
+            <span class="keyword">return</span> moment(num);
+        }
+    },
+    parse: <span class="keyword">function</span>(response) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>We override the parse() function so we can handle
+the unusual data format from the server. In particular,
+it provides start and end times in minutes since
+9:00am of the current day. We&#39;ll check to make sure
+the server hasn&#39;t changed to the more standard
+format of unix seconds.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        response.start = <span class="keyword">this</span>.makeMoment(response.start);
+        response.end = <span class="keyword">this</span>.makeMoment(response.end);
+        <span class="keyword">return</span> response;
+    }
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <h2>View of Event as a List Item</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>myApp.EventAsListItem = Backbone.View.extend({
+    tagName:  <span class="string">"li"</span>,
+    className: <span class="string">"event"</span>,
+    template: _.template(
+        <span class="string">"&lt;span class='event-times'&gt;"</span> +
+           <span class="string">"&lt;time class='start-time' datetime='&lt;% print(start.format(\'YYYY-MM-DD HH:mm\')) %&gt;'&gt;"</span> +
+               <span class="string">"&lt;% print(start.format('h:mm a')) %&gt;"</span> +
+           <span class="string">"&lt;/time&gt;"</span> +
+           <span class="string">" to "</span> +
+           <span class="string">"&lt;time class='end-time' datetime='&lt;% print(end.format(\'YYYY-MM-DD HH:mm\')) %&gt;'&gt;"</span> +
+               <span class="string">"&lt;% print(end.format('h:mm a')) %&gt;"</span> +
+           <span class="string">"&lt;/time&gt;"</span> +
+           <span class="string">": "</span> +
+        <span class="string">"&lt;/span&gt;"</span> +
+        <span class="string">"&lt;span class='event-title'&gt;"</span> +
+            <span class="string">"&lt;%= title %&gt;"</span> +
+        <span class="string">"&lt;/span&gt;"</span> +
+        <span class="string">"&lt;span class='event-location-prefix'&gt; at &lt;/span&gt;"</span> +
+        <span class="string">"&lt;span class='event-location'&gt;"</span> +
+            <span class="string">"&lt;%= location %&gt;"</span> +
+        <span class="string">"&lt;/span&gt;"</span>
+    ),
+    render: <span class="keyword">function</span>() {
+        <span class="keyword">this</span>.$el.attr(<span class="string">"data-top"</span>,<span class="keyword">this</span>.model.get(<span class="string">"top"</span>)+<span class="string">"%"</span>);
+        <span class="keyword">this</span>.$el.attr(<span class="string">"data-left"</span>,<span class="keyword">this</span>.model.get(<span class="string">"left"</span>)+<span class="string">"%"</span>);
+        <span class="keyword">this</span>.$el.attr(<span class="string">"data-height"</span>,<span class="keyword">this</span>.model.get(<span class="string">"height"</span>)+<span class="string">"%"</span>);
+        <span class="keyword">this</span>.$el.attr(<span class="string">"data-width"</span>,<span class="keyword">this</span>.model.get(<span class="string">"width"</span>)+<span class="string">"%"</span>);
+        <span class="keyword">this</span>.$el.html(<span class="keyword">this</span>.template(<span class="keyword">this</span>.model.attributes));
+        <span class="keyword">return</span> <span class="keyword">this</span>;
+    },
+    initialize: <span class="keyword">function</span>() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>If the model changes, update the view.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>.listenTo(<span class="keyword">this</span>.model, <span class="string">"change"</span>, <span class="keyword">this</span>.render);
+    }
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <h2>Events Collection</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>myApp.Events = Backbone.Collection.extend({
+    model: myApp.Event,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>In most browsers, the following URL will fetch a simple
+JSON-formatted file from the server. If you&#39;re simply
+loading HTML from the local file system (rather than a
+local web server, Chrome will consider the access to
+be a violation of Cross Origin Resource Sharing and
+refuse to load the file. You can get around this by
+running a local web server instead of loading directly
+from the file system.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    url: <span class="string">"api/events.json"</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>Calculate the layout positions for the events.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    layout: <span class="keyword">function</span>(startTime, endTime) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>Find start and end time in minutes since midnight.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">var</span> startMins = _((startTime).split(<span class="string">":"</span>)).reduce(<span class="keyword">function</span>(mins, n) {<span class="keyword">return</span> mins*<span class="number">60</span>+parseInt(n,<span class="number">10</span>);}, <span class="number">0</span>);
+        <span class="keyword">var</span> endMins   = _((endTime  ).split(<span class="string">":"</span>)).reduce(<span class="keyword">function</span>(mins, n) {<span class="keyword">return</span> mins*<span class="number">60</span>+parseInt(n,<span class="number">10</span>);}, <span class="number">0</span>);
+        <span class="keyword">var</span> totalMins = endMins - startMins;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>Each day is independent.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        _.each(<span class="keyword">this</span>.groupBy(<span class="keyword">function</span>(event){
+            <span class="keyword">return</span> event.get(<span class="string">"start"</span>).format(<span class="string">"YYYY-MM-DD"</span>);
+        }), <span class="keyword">function</span>(eventList, date) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>Create objects to represent the start and end of
+the displayed times for the date.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">var</span> startDay = moment(date).add(<span class="string">"minutes"</span>, startMins);
+            <span class="keyword">var</span> endDay   = moment(date).add(<span class="string">"minutes"</span>, endMins);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>Because groupBy() returns an array rather than a real
+Backbone collection, eventList is an array of Backbone
+models. We only need the attributes of those models
+for this analysis.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">var</span> events = _(eventList).pluck(<span class="string">"attributes"</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>Finding overlapping events and identifying the appropriate
+position for each event is non-trivial enough to justify a
+a decent amount of commentary. To help with the explanations,
+we&#39;ll use the following example. For brevity, we&#39;ll abbreviate
+the properties:</p>
+<pre><code>  i = id
+  s = start
+  e = end</code></pre>
+<p>Here&#39;s the input we&#39;ll use for example:
+    events = [
+        {i: 1, s:  30, e: 150},
+        {i: 2, s: 540, e: 600},
+        {i: 3, s: 560, e: 620},
+        {i: 4, s: 600, e: 670}
+    ];</p>
+<p>In the first stage we&#39;re going to create a new array of all
+times defined in the events list, where a time is either a
+starting time or an ending time. In doing that, we&#39;ll add
+two new properties to each event:</p>
+<pre><code>  t = time (either start time or end time)
+  y = type (either &quot;start&quot; or &quot;end&quot;)</code></pre>
+<p>We&#39;ll create two separate arrays (start_times and end_times),
+concatenate them, and sort the resulting combination. First
+up is start_times.</p>
+<pre><code>start_times = [
+    {i: 1, s:  30, e: 150, t:  30, y: &quot;start&quot;},
+    {i: 2, s: 540, e: 600, t: 540, y: &quot;start&quot;},
+    {i: 3, s: 560, e: 620, t: 560, y: &quot;start&quot;},
+    {i: 4, s: 600, e: 670, t: 610, y: &quot;start&quot;}
+];</code></pre>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">var</span> start_times = _(events.slice(<span class="number">0</span>)).map(<span class="keyword">function</span>(el) {
+                <span class="keyword">return</span> _({}).extend(el,{time: el.start, type: <span class="string">"start"</span>});
+            });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <pre><code>end_times = [
+    {i: 1, s:  30, e: 150, t: 150, y: &quot;end&quot;},
+    {i: 2, s: 540, e: 600, t: 600, y: &quot;end&quot;},
+    {i: 3, s: 560, e: 620, t: 620, y: &quot;end&quot;},
+    {i: 4, s: 600, e: 670, t: 670, y: &quot;end&quot;}
+];</code></pre>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">var</span> end_times = _(events.slice(<span class="number">0</span>)).map(<span class="keyword">function</span>(el) {
+                <span class="keyword">return</span> _({}).extend(el,{time: el.end, type: <span class="string">"end"</span>});
+            });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <pre><code>all_times = [
+    {i: 1, s:  30, e: 150, t:  30, y: &quot;start&quot;},
+    {i: 2, s: 540, e: 600, t: 540, y: &quot;start&quot;},
+    {i: 3, s: 560, e: 620, t: 560, y: &quot;start&quot;},
+    {i: 4, s: 600, e: 670, t: 600, y: &quot;start&quot;},
+    {i: 1, s:  30, e: 150, t: 150, y: &quot;end&quot;},
+    {i: 2, s: 540, e: 600, t: 600, y: &quot;end&quot;},
+    {i: 3, s: 560, e: 620, t: 620, y: &quot;end&quot;},
+    {i: 4, s: 600, e: 670, t: 670, y: &quot;end&quot;}
+];</code></pre>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">var</span> all_times = start_times.concat(end_times);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>Now that we&#39;ve got the combined array of times, we&#39;re
+going to sort based on the time property. The only
+tricky part is handling ties. If one event ends at
+the exact same time as another event starts, we
+don&#39;t want to consider them as overlapping. To
+honor that convention, we&#39;ll favor end times over
+start times in the case of ties. Here&#39;s the result
+we&#39;re looking for:</p>
+<pre><code>all_times = [
+    {i: 1, s:  30, e: 150, t:  30, y: &quot;start&quot;},
+    {i: 1, s:  30, e: 150, t: 150, y: &quot;end&quot;},
+    {i: 2, s: 540, e: 600, t: 540, y: &quot;start&quot;},
+    {i: 3, s: 560, e: 620, t: 560, y: &quot;start&quot;},
+    {i: 2, s: 540, e: 600, t: 600, y: &quot;end&quot;},
+    {i: 4, s: 600, e: 670, t: 600, y: &quot;start&quot;},
+    {i: 3, s: 560, e: 620, t: 620, y: &quot;end&quot;},
+    {i: 4, s: 600, e: 670, t: 670, y: &quot;end&quot;}
+];</code></pre>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            all_times.sort(<span class="keyword">function</span>(a,b){
+                <span class="keyword">if</span> (a.time.valueOf() === b.time.valueOf()) {
+                    <span class="keyword">return</span> a.type === <span class="string">"end"</span> ? -<span class="number">1</span> : <span class="number">1</span>;
+                }
+                <span class="keyword">return</span> a.time - b.time;
+            });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>The next stage is where we actually find the overlapping
+events. We&#39;re going to iterate through our sorted list
+of times while maintaining a stack. For each time, we look
+at its type. When we encounter a start time, we&#39;ll add
+the event to the stack, and when we encounter an end time,
+we&#39;ll extract the appropriate event from the stack. (That&#39;s
+not a simple pop since the event we&#39;re removing isn&#39;t
+necessarily on the top of the stack.)</p>
+<p>Here&#39;s how the stack will look at each step in the iteration;
+the event id is what we&#39;re showing below in the stacks and we&#39;re
+showing the stack before processing the next element and then
+after processing it.</p>
+<pre><code>[]     {i: 1, s:  30, e: 150, t:  30, y: &quot;start&quot;}   [1]
+[1]    {i: 1, s:  30, e: 150, t: 150, y: &quot;end&quot;  }   []
+[]     {i: 2, s: 540, e: 600, t: 540, y: &quot;start&quot;}   [2]
+[2]    {i: 3, s: 560, e: 620, t: 560, y: &quot;start&quot;}   [2 3]
+[2 3]  {i: 2, s: 540, e: 600, t: 600, y: &quot;end&quot;  }   [3]
+[3]    {i: 4, s: 600, e: 670, t: 600, y: &quot;start&quot;}   [3 4]
+[3 4]  {i: 3, s: 560, e: 620, t: 620, y: &quot;end&quot;  }   [4]
+[4]    {i: 4, s: 600, e: 670, t: 670, y: &quot;end&quot;  }   []</code></pre>
+<p>As we create the stack, we&#39;ll add properties to the event
+objects. (Since each event occurs twice, both as a start
+time and an end time, we&#39;re only going to add these
+properties to the object corresponding to the start time.)
+The two new properties are overlap and position:</p>
+<pre><code>o = overlap  (number of overlapping events)
+p = position (left-to-right position of the event)</code></pre>
+<p>The overlap property for an event is the maximum size that
+the stack reaches while the event is on the stack (less
+one to account for zero-indexing). Whenever we add a new
+item to the stack, we update this property on all items
+on the stack. Here&#39;s the value of that property after
+we&#39;ve processed the whole array. (As noted above, only
+start times have the property.)</p>
+<pre><code>all_times = [
+    {i: 1, s:  30, e: 150, t:  30, y: &quot;start&quot;, o: 0},
+    {i: 1, s:  30, e: 150, t: 150, y: &quot;end&quot;  },
+    {i: 2, s: 540, e: 600, t: 540, y: &quot;start&quot;, o: 1},
+    {i: 3, s: 560, e: 620, t: 560, y: &quot;start&quot;, o: 1},
+    {i: 2, s: 540, e: 600, t: 600, y: &quot;end&quot;  },
+    {i: 4, s: 600, e: 670, t: 600, y: &quot;start&quot;, o: 1},
+    {i: 3, s: 560, e: 620, t: 620, y: &quot;end&quot;  },
+    {i: 4, s: 600, e: 670, t: 670, y: &quot;end&quot;  }
+];</code></pre>
+<p>The position property is the left-most position that is
+not currently occupied by any item on the stack when the
+event is first added to the stack. Here are the values
+for that property after the iteration.</p>
+<pre><code>all_times = [
+    {i: 1, s:  30, e: 150, t:  30, y: &quot;start&quot;, o: 0, p: 0},
+    {i: 1, s:  30, e: 150, t: 150, y: &quot;end&quot;  },
+    {i: 2, s: 540, e: 600, t: 540, y: &quot;start&quot;, o: 1, p: 0},
+    {i: 3, s: 560, e: 620, t: 560, y: &quot;start&quot;, o: 1, p: 1},
+    {i: 2, s: 540, e: 600, t: 600, y: &quot;end&quot;  },
+    {i: 4, s: 600, e: 670, t: 600, y: &quot;start&quot;, o: 1, p: 0},
+    {i: 3, s: 560, e: 620, t: 620, y: &quot;end&quot;  },
+    {i: 4, s: 600, e: 670, t: 670, y: &quot;end&quot;  }
+];</code></pre>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            
+            _(all_times).reduce(<span class="keyword">function</span>(stack, el) {
+                <span class="keyword">if</span> (el.type === <span class="string">"start"</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p>Add item to stack.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    stack.push(el);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>Find position for new item.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    el.position = _.difference(
+                        _.range(stack.length),
+                        _(stack).pluck(<span class="string">"position"</span>)
+                    )[<span class="number">0</span>] || <span class="number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <p>Update overlap property on entire stack.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    _(stack).each(<span class="keyword">function</span>(stk) {
+                        stk.overlap = stack.length-<span class="number">1</span>;
+                    }, <span class="keyword">this</span>);
+                } <span class="keyword">else</span> {
+                    stack = _(stack).reject(<span class="keyword">function</span>(stk) {
+                        <span class="keyword">return</span> stk.id === el.id;
+                    }, <span class="keyword">this</span>);
+                }
+                <span class="keyword">return</span> stack;
+            }, []);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>And that&#39;s it! The only thing left to do is a bit of cleanup.
+Specifically, we&#39;ll extract the starting time events from
+the whole array. (They&#39;re the ones with the extra properties.)
+Then we&#39;ll update the original models with the new property
+values.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            _(all_times).chain().
+                filter(<span class="keyword">function</span>(el) {
+                    <span class="keyword">return</span> el.type === <span class="string">"start"</span>;
+                }).
+                each(<span class="keyword">function</span>(el) {
+                    <span class="keyword">var</span> startDisplay = moment(Math.max(el.start, startDay));
+                    <span class="keyword">var</span> endDisplay   = moment(Math.min(el.end,   endDay));
+                    <span class="keyword">this</span>.get(el.id).set({
+                        width:  Math.floor(<span class="number">100</span>/(el.overlap+<span class="number">1</span>)),
+                        left:   Math.floor((el.position*<span class="number">100</span>)/(el.overlap+<span class="number">1</span>)),
+                        height: Math.floor(<span class="number">100</span>*moment.duration(endDisplay - startDisplay).asMinutes()/totalMins),
+                        top:    Math.floor(<span class="number">100</span>*moment.duration(startDisplay - startDay).asMinutes()/totalMins)
+                    });
+                }, <span class="keyword">this</span>);
+
+        }, <span class="keyword">this</span>);
+        
+        <span class="keyword">return</span> <span class="keyword">this</span>;
+    }
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <h2>View of Events as an Unordered List</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>myApp.EventsAsList = Backbone.View.extend({
+    tagName: <span class="string">"ul"</span>,
+    className: <span class="string">"events"</span>,
+    initialize: <span class="keyword">function</span>() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <p>A specific date can be included in the options
+(in YYYY-MM-DD format); but if none was specified,
+default to today.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>.options.date = (<span class="keyword">typeof</span> <span class="keyword">this</span>.options.date === <span class="string">"undefined"</span>) ? moment() : moment(<span class="keyword">this</span>.options.date);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>The time range can also be specified in options; defaults
+to 9:00am to 9:00pm.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>.options.startTime = <span class="keyword">this</span>.options.startTime ||  <span class="string">"9:00"</span>;
+        <span class="keyword">this</span>.options.endTime   = <span class="keyword">this</span>.options.endTime   || <span class="string">"21:00"</span>;
+        <span class="keyword">this</span>.collection.on(<span class="string">"add"</span>, <span class="keyword">this</span>.addOne, <span class="keyword">this</span>);
+    },
+    render: <span class="keyword">function</span>() {
+        <span class="keyword">this</span>.$el.empty();
+        <span class="keyword">this</span>.addAll();
+        <span class="keyword">return</span> <span class="keyword">this</span>;
+    },
+    addAll: <span class="keyword">function</span>() {
+        <span class="keyword">this</span>.collection.each(<span class="keyword">this</span>.addOne, <span class="keyword">this</span>);
+    },
+    addOne: <span class="keyword">function</span>(event) {
+        <span class="keyword">if</span> (event.get(<span class="string">"start"</span>).isSame(<span class="keyword">this</span>.options.date, <span class="string">"day"</span>)) {
+            <span class="keyword">this</span>.collection.layout(<span class="keyword">this</span>.options.startTime, <span class="keyword">this</span>.options.endTime);
+            <span class="keyword">var</span> item = <span class="keyword">new</span> myApp.EventAsListItem({model: event});
+            item.render();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <p>For the mobile view, we want to make sure the
+new event is added in sorted order.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">var</span> index = _.sortedIndex(<span class="keyword">this</span>.$el.find(item.tagName), item.el, <span class="keyword">function</span>(item) {
+                <span class="keyword">return</span> $(item).attr(<span class="string">"data-top"</span>);
+            });
+            <span class="keyword">if</span> (index === <span class="number">0</span>) {
+                <span class="keyword">this</span>.$el.prepend(item.el);
+            } <span class="keyword">else</span> {
+                <span class="keyword">this</span>.$el.children().eq(index - <span class="number">1</span>).after(item.el);
+            }
+        }
+    }
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <h2>View for Legend Corresponding to Event List</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-37">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>myApp.EventListLegend = Backbone.View.extend({
+    tagName: <span class="string">"ul"</span>,
+    className: <span class="string">"legend"</span>,
+    major_template: _.template(
+        <span class="string">"&lt;li class='major-tick' data-top='&lt;%= top %&gt;%'&gt;"</span> +
+            <span class="string">"&lt;%= time %&gt; &lt;small&gt;&lt;%= ampm %&gt;&lt;/small&gt;"</span> +
+        <span class="string">"&lt;/li&gt;"</span>
+    ),
+    minor_template: _.template(
+        <span class="string">"&lt;li class='minor-tick' data-top='&lt;%= top %&gt;%'&gt;"</span> +
+            <span class="string">"&lt;%= time %&gt;"</span> +
+        <span class="string">"&lt;/li&gt;"</span>
+    ),
+    initialize: <span class="keyword">function</span>() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-38">&#182;</a>
+              </div>
+              <p>A specific date can be included in the options
+(in YYYY-MM-DD format); but if none was specified,
+default to today.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>.options.date = (<span class="keyword">typeof</span> <span class="keyword">this</span>.options.date === <span class="string">"undefined"</span>) ? moment() : moment(<span class="keyword">this</span>.options.date);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-39">&#182;</a>
+              </div>
+              <p>The time range can also be specified in options; defaults
+to 9:00am to 9:00pm with major ticks every hour and minor
+ticks every 30 minutes.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>.options.startTime  = <span class="keyword">this</span>.options.startTime  ||  <span class="string">"9:00"</span>;
+        <span class="keyword">this</span>.options.endTime    = <span class="keyword">this</span>.options.endTime    || <span class="string">"21:00"</span>;
+        <span class="keyword">this</span>.options.majorTicks = <span class="keyword">this</span>.options.majorTicks ||  <span class="number">60</span>;
+        <span class="keyword">this</span>.options.minorTicks = <span class="keyword">this</span>.options.minorTicks ||  <span class="number">30</span>;
+    },
+    render: <span class="keyword">function</span>() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-40">&#182;</a>
+              </div>
+              <p>Mark the legend as non-semantic for accessibility.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>.$el.attr(<span class="string">"role"</span>, <span class="string">"presentation"</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-41">&#182;</a>
+              </div>
+              <p>Calculate the bounds for the legend.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">var</span> startMins = _((<span class="keyword">this</span>.options.startTime).split(<span class="string">":"</span>)).reduce(<span class="keyword">function</span>(mins, n) {<span class="keyword">return</span> mins*<span class="number">60</span>+parseInt(n,<span class="number">10</span>);}, <span class="number">0</span>);
+        <span class="keyword">var</span> endMins   = _((<span class="keyword">this</span>.options.endTime  ).split(<span class="string">":"</span>)).reduce(<span class="keyword">function</span>(mins, n) {<span class="keyword">return</span> mins*<span class="number">60</span>+parseInt(n,<span class="number">10</span>);}, <span class="number">0</span>);
+        <span class="keyword">var</span> totalMins = endMins - startMins;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-42">&#182;</a>
+              </div>
+              <p>Create arrays for major and minor tick marks.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">var</span> majors = _.range(<span class="number">0</span>, totalMins+<span class="number">1</span>, <span class="keyword">this</span>.options.majorTicks);
+        <span class="keyword">var</span> minors = _.range(<span class="number">0</span>, totalMins+<span class="number">1</span>, <span class="keyword">this</span>.options.minorTicks);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-43">&#182;</a>
+              </div>
+              <p>Exclude from minor tick marks any values that are also major.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        minors = _(minors).difference(majors);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-44">&#182;</a>
+              </div>
+              <p>Create the array of objects representing tick marks, beginning
+with major ticks.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">var</span> ticks = _(majors).
+            map(<span class="keyword">function</span>(mins) {
+                <span class="keyword">var</span> today = moment().hour(<span class="number">0</span>).minute(<span class="number">0</span>).second(<span class="number">0</span>).millisecond(<span class="number">0</span>);
+                <span class="keyword">return</span> {time: today.add(<span class="string">"minutes"</span>,mins+startMins), type: <span class="string">"M"</span>};
+            }, <span class="keyword">this</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-45">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-45">&#182;</a>
+              </div>
+              <p>Add the minor tick marks to the array.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        ticks = ticks.concat(_(minors).
+            map(<span class="keyword">function</span>(mins) {
+                <span class="keyword">var</span> today = moment().hour(<span class="number">0</span>).minute(<span class="number">0</span>).second(<span class="number">0</span>).millisecond(<span class="number">0</span>);
+                <span class="keyword">return</span> {time: today.add(<span class="string">"minutes"</span>,mins+startMins), type: <span class="string">"m"</span>};
+            }, <span class="keyword">this</span>)
+        );</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-46">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-46">&#182;</a>
+              </div>
+              <p>Sort the mixed major/minor tick marks.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        ticks = _(ticks).sortBy(<span class="string">"time"</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-47">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-47">&#182;</a>
+              </div>
+              <p>Calculate a relative position for each mark.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        _(ticks).each(<span class="keyword">function</span>(tick,index){
+            tick.top = Math.floor(<span class="number">100</span>*index/<span class="keyword">this</span>);
+        },ticks.length-<span class="number">1</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-48">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-48">&#182;</a>
+              </div>
+              <p>Finally, generate the HTML for all marks.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>.$el.html(_(ticks).reduce(
+            <span class="keyword">function</span>(html, tick) {
+                <span class="keyword">var</span> attrs = {
+                    time: tick.time.format(<span class="string">"h:mm"</span>),
+                    ampm: tick.time.format(<span class="string">"A"</span>),
+                    top:  tick.top
+                };
+                <span class="keyword">return</span> html + ((tick.type === <span class="string">"M"</span>) ?
+                                  <span class="keyword">this</span>.major_template(attrs) :
+                                  <span class="keyword">this</span>.minor_template(attrs)
+                              );
+            },
+            <span class="string">""</span>,
+            <span class="keyword">this</span>
+        ));
+        <span class="keyword">return</span> <span class="keyword">this</span>;
+    }
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-49">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-49">&#182;</a>
+              </div>
+              <h2>Main view for the application</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-50">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-50">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>myApp.MainView = Backbone.View.extend({
+    start: <span class="keyword">function</span>() {
+        <span class="keyword">this</span>.events = <span class="keyword">new</span> myApp.Events();
+        <span class="keyword">this</span>.events.fetch();
+        <span class="keyword">return</span> <span class="keyword">this</span>;
+    },
+    render: <span class="keyword">function</span>() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-51">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-51">&#182;</a>
+              </div>
+              <p>Parameters that affect the presentation
+of the events.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">var</span> date = moment();     <span class="comment">// today</span>
+        <span class="keyword">var</span> startTime = <span class="string">"9:00"</span>;  <span class="comment">// from 9:00am</span>
+        <span class="keyword">var</span> endTime = <span class="string">"21:00"</span>;   <span class="comment">// until 9:00pm</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-52">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-52">&#182;</a>
+              </div>
+              <p>Start with the title.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>.$el.html(<span class="string">"&lt;h1&gt;"</span>+date.format(<span class="string">"dddd, MMMM Do YYYY"</span>)+<span class="string">"&lt;/h1&gt;"</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-53">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-53">&#182;</a>
+              </div>
+              <p>Add the legend (the time divisions) but only if we&#39;re
+sure the CSS styles are present, as the legend serves
+no semantic purpose. We test for CSS loading by
+seeing if a style has been applied to the (empty)
+beacon <code>&lt;div&gt;</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">if</span> ($(<span class="string">"#beacon"</span>).css(<span class="string">"display"</span>) === <span class="string">"none"</span>) {
+            <span class="keyword">this</span>.legend = <span class="keyword">new</span> myApp.EventListLegend({
+                date:       date.format(<span class="string">"YYYY-MM-DD"</span>),
+                startTime:  startTime,
+                endTime:    endTime,
+                majorTicks: <span class="number">60</span>,
+                minorTicks: <span class="number">30</span>
+            });
+            <span class="keyword">this</span>.$el.append(<span class="keyword">this</span>.legend.render().el);
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-54">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-54">&#182;</a>
+              </div>
+              <p>Add the events themselves.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>.list = <span class="keyword">new</span> myApp.EventsAsList({
+            collection: <span class="keyword">this</span>.events,
+            date:       date.format(<span class="string">"YYYY-MM-DD"</span>),
+            startTime:  startTime,
+            endTime:    endTime
+        });
+        <span class="keyword">var</span> events = $(<span class="string">"&lt;div&gt;"</span>).addClass(<span class="string">"events-wrapper"</span>).html(<span class="keyword">this</span>.list.render().el);
+        <span class="keyword">this</span>.$el.append(events);
+        <span class="keyword">return</span> <span class="keyword">this</span>;
+    }
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-55">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-55">&#182;</a>
+              </div>
+              <h2>Start the Application</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-56">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-56">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>$(<span class="keyword">function</span>() {
+    myApp.main = <span class="keyword">new</span> myApp.MainView({el: $(<span class="string">"#myApp"</span>)});
+    myApp.main.start().render();
+});</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
