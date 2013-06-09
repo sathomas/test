@@ -1,6 +1,6 @@
 # Test
 
-See this project’s [web page](http://sathomas.me/test/) for a full explanation.
+> Note: If you’re viewing the README file directly, a more complete version is available at this project’s [web page](http://sathomas.me/test/).
 
 ## Status: [![Build Status](https://travis-ci.org/sathomas/test.png)](https://travis-ci.org/sathomas/test)
 
@@ -143,15 +143,17 @@ The primary styles for the project are included in the `events.less` file, which
 
 To see the resulting web application (e.g. in a desktop browser) use <a href="http://sathomas.me/test/build/index.html" target="_blank">this link</a> (in a separate window). The `<iframe>` below contains the smartphone view of the same data. (It simply loads the same URL in an `<iframe>` of fixed height and width.)
 
+> Note: Because of GitHub restrictions, the embedded `<iframe>` is only visible on the [web page](http://sathomas.me/test/) version of this file.
+
 <iframe height="480" width="320" src="http://sathomas.me/test/build/index.html" style="border: 2px #888 solid"></iframe>
 
 ## Javascript
 
 The bulk of the project consist of a single Javascript file, `app.js`. That file implements a standard set of [Backbone.js](http://backbonejs.org) models, views, and collections. Although the problem specifies a single, static set of events, the code supports a REST API for server interaction, multiple day support, and dynamic creation or modification of events.
 
-Comments within that file provide extensive documentation. That documentation is viewable as a separate [web page](http://sathomas.me/test/src/app.html).
+Comments within that file provide extensive documentation. That documentation is viewable as a separate [web page](http://sathomas.me/test/src/app.html). The code also relies heavily on [Underscore.js](http://underscorejs.org) to implement a functional programming paradigm. I’ve described Underscore’s support for functional programming in this [blog post](http://blog.sathomas.me/post/making-javascript-functional-with-underscore.js).
 
-The full suite of unit tests for the app are contained in the `app-test.js`. Those tests are self-documenting by design. A sample unit test output is shown below.
+The full suite of unit tests for the app are contained in the `app-test.js`. Those tests are self-documenting by design. For a thorough description of my unit testing strategy, tools, and process, you can check out this [blog post](http://blog.sathomas.me/post/unit-testing-backbone.js-applications). A sample unit test output is shown below.
 
 <pre style="color:white; background: #333">
 
