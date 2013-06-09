@@ -1,5 +1,7 @@
 # Test
 
+See this project’s [web page](http://sathomas.me/test/) for a full explanation.
+
 ## Status: [![Build Status](https://travis-ci.org/sathomas/test.png)](https://travis-ci.org/sathomas/test)
 
 Any update to this repository triggers an automated execution of all of the project’s unit tests. The status label above shows the result of those unit tests.
