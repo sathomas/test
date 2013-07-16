@@ -778,7 +778,7 @@ to 9:00am to 9:00pm.</p>
             
             <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>.options.startTime = <span class="keyword">this</span>.options.startTime ||  <span class="string">"9:00"</span>;
         <span class="keyword">this</span>.options.endTime   = <span class="keyword">this</span>.options.endTime   || <span class="string">"21:00"</span>;
-        <span class="keyword">this</span>.collection.on(<span class="string">"add"</span>, <span class="keyword">this</span>.addOne, <span class="keyword">this</span>);
+        <span class="keyword">this</span>.listenTo(<span class="keyword">this</span>.collection, <span class="string">"add"</span>, <span class="keyword">this</span>.addOne);
     },
     render: <span class="keyword">function</span>() {
         <span class="keyword">this</span>.$el.empty();

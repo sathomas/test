@@ -151,7 +151,7 @@ To see the resulting web application (e.g. in a desktop browser) use <a href="ht
 
 The bulk of the project consist of a single Javascript file, `app.js`. That file implements a standard set of [Backbone.js](http://backbonejs.org) models, views, and collections. Although the problem specifies a single, static set of events, the code supports a REST API for server interaction, multiple day support, and dynamic creation or modification of events.
 
-Comments within that file provide extensive documentation. That documentation is viewable as a separate [web page](http://sathomas.me/test/src/app.html). The code also relies heavily on [Underscore.js](http://underscorejs.org) to implement a functional programming paradigm. I’ve described Underscore’s support for functional programming in this [blog post](http://blog.sathomas.me/post/making-javascript-functional-with-underscore.js).
+Comments within that file provide extensive documentation. _**That documentation is viewable as a separate [web page](http://sathomas.me/test/src/app.html).**_ The code also relies heavily on [Underscore.js](http://underscorejs.org) to implement a functional programming paradigm. I’ve described Underscore’s support for functional programming in this [blog post](http://blog.sathomas.me/post/making-javascript-functional-with-underscore.js).
 
 The full suite of unit tests for the app are contained in the `app-test.js`. Those tests are self-documenting by design. For a thorough description of my unit testing strategy, tools, and process, you can check out this [blog post](http://blog.sathomas.me/post/unit-testing-backbone.js-applications). A sample unit test output is shown below.
 
