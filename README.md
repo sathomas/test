@@ -47,7 +47,7 @@ testem.json
 
 ## The HTML Markup
 
-The basic HTML for the project is a standard, valid HTML5 document. A single `<div>` with an `id` attribute of `myApp` contains the application.
+The basic HTML for the project is a standard, valid HTML5 document. A single `<div>` with an `id` attribute of `thisApps` contains the application.
 
 ```html
 <!DOCTYPE html>
@@ -68,7 +68,7 @@ The basic HTML for the project is a standard, valid HTML5 document. A single `<d
     <div id="beacon"></div>
     
     <!-- The app's main view is rendered within the following <div> -->
-    <div id="myApp"><div>
+    <div id="thisApps"><div>
     
     <!-- All scripts in single, minified script file -->
     <script src="js/scripts.min.js"></script>

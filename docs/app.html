@@ -98,7 +98,7 @@ originality here.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="keyword">var</span> myApp = myApp  || {};</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="keyword">var</span> thisApps = thisApps  || {};</pre></div></div>
             
         </li>
         
@@ -116,7 +116,7 @@ namespace.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="keyword">if</span> (<span class="keyword">typeof</span> exports !== <span class="string">'undefined'</span> &amp;&amp; <span class="keyword">this</span>.exports !== exports) {
-    global.myApp = myApp;
+    global.thisApps = thisApps;
 }</pre></div></div>
             
         </li>
@@ -144,7 +144,7 @@ namespace.</p>
               
             </div>
             
-            <div class="content"><div class='highlight'><pre>myApp.Event = Backbone.Model.extend({
+            <div class="content"><div class='highlight'><pre>thisApps.Event = Backbone.Model.extend({
     defaults: {
         start:    moment(),  <span class="comment">// default start time is now</span>
         end:      moment(),  <span class="comment">// default end time is now</span>
@@ -234,7 +234,7 @@ format of unix seconds.</p>
               
             </div>
             
-            <div class="content"><div class='highlight'><pre>myApp.EventAsListItem = Backbone.View.extend({
+            <div class="content"><div class='highlight'><pre>thisApps.EventAsListItem = Backbone.View.extend({
     tagName:  <span class="string">"li"</span>,
     className: <span class="string">"event"</span>,
     template: _.template(
@@ -308,8 +308,8 @@ format of unix seconds.</p>
               
             </div>
             
-            <div class="content"><div class='highlight'><pre>myApp.Events = Backbone.Collection.extend({
-    model: myApp.Event,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>thisApps.Events = Backbone.Collection.extend({
+    model: thisApps.Event,</pre></div></div>
             
         </li>
         
@@ -740,7 +740,7 @@ values.</p>
               
             </div>
             
-            <div class="content"><div class='highlight'><pre>myApp.EventsAsList = Backbone.View.extend({
+            <div class="content"><div class='highlight'><pre>thisApps.EventsAsList = Backbone.View.extend({
     tagName: <span class="string">"ul"</span>,
     className: <span class="string">"events"</span>,
     initialize: <span class="keyword">function</span>() {</pre></div></div>
@@ -791,7 +791,7 @@ to 9:00am to 9:00pm.</p>
     addOne: <span class="keyword">function</span>(event) {
         <span class="keyword">if</span> (event.get(<span class="string">"start"</span>).isSame(<span class="keyword">this</span>.options.date, <span class="string">"day"</span>)) {
             <span class="keyword">this</span>.collection.layout(<span class="keyword">this</span>.options.startTime, <span class="keyword">this</span>.options.endTime);
-            <span class="keyword">var</span> item = <span class="keyword">new</span> myApp.EventAsListItem({model: event});
+            <span class="keyword">var</span> item = <span class="keyword">new</span> thisApps.EventAsListItem({model: event});
             item.render();</pre></div></div>
             
         </li>
@@ -845,7 +845,7 @@ new event is added in sorted order.</p>
               
             </div>
             
-            <div class="content"><div class='highlight'><pre>myApp.EventListLegend = Backbone.View.extend({
+            <div class="content"><div class='highlight'><pre>thisApps.EventListLegend = Backbone.View.extend({
     tagName: <span class="string">"ul"</span>,
     className: <span class="string">"legend"</span>,
     major_template: _.template(
@@ -1091,9 +1091,9 @@ with major ticks.</p>
               
             </div>
             
-            <div class="content"><div class='highlight'><pre>myApp.MainView = Backbone.View.extend({
+            <div class="content"><div class='highlight'><pre>thisApps.MainView = Backbone.View.extend({
     start: <span class="keyword">function</span>() {
-        <span class="keyword">this</span>.events = <span class="keyword">new</span> myApp.Events();
+        <span class="keyword">this</span>.events = <span class="keyword">new</span> thisApps.Events();
         <span class="keyword">this</span>.events.fetch();
         <span class="keyword">return</span> <span class="keyword">this</span>;
     },
@@ -1150,7 +1150,7 @@ beacon <code>&lt;div&gt;</code>.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>        <span class="keyword">if</span> ($(<span class="string">"#beacon"</span>).css(<span class="string">"display"</span>) === <span class="string">"none"</span>) {
-            <span class="keyword">this</span>.legend = <span class="keyword">new</span> myApp.EventListLegend({
+            <span class="keyword">this</span>.legend = <span class="keyword">new</span> thisApps.EventListLegend({
                 date:       date.format(<span class="string">"YYYY-MM-DD"</span>),
                 startTime:  startTime,
                 endTime:    endTime,
@@ -1173,7 +1173,7 @@ beacon <code>&lt;div&gt;</code>.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>.list = <span class="keyword">new</span> myApp.EventsAsList({
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>.list = <span class="keyword">new</span> thisApps.EventsAsList({
             collection: <span class="keyword">this</span>.events,
             date:       date.format(<span class="string">"YYYY-MM-DD"</span>),
             startTime:  startTime,
@@ -1211,8 +1211,8 @@ beacon <code>&lt;div&gt;</code>.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>$(<span class="keyword">function</span>() {
-    myApp.main = <span class="keyword">new</span> myApp.MainView({el: $(<span class="string">"#myApp"</span>)});
-    myApp.main.start().render();
+    thisApps.main = <span class="keyword">new</span> thisApps.MainView({el: $(<span class="string">"#thisApps"</span>)});
+    thisApps.main.start().render();
 });</pre></div></div>
             
         </li>
