@@ -4,8 +4,6 @@
 
 ## Status: [![Build Status](https://travis-ci.org/sathomas/test.png)](https://travis-ci.org/sathomas/test)
 
-<img src="https://github-camo.global.ssl.fastly.net/d3750343c0ed6dc6ad8325c2e3d0e91ca5f3e8cd/68747470733a2f2f7472617669732d63692e6f72672f736174686f6d61732f746573742e706e67" alt="Build Status" data-canonical-src="https://travis-ci.org/sathomas/test.png" style="max-width:100%;">
-
 Any update to this repository triggers an automated execution of all of the project’s unit tests. The status label above shows the result of those unit tests.
 
 ## Introduction
