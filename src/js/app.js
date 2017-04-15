@@ -20,20 +20,20 @@ if (typeof exports !== 'undefined' && this.exports !== exports) {
 // our models, views, etc. We're not going for
 // originality here.
 
-var myApp = myApp  || {};
+var thisApps = thisApps  || {};
 
 // And if we're running in node (i.e. unit testing),
 // we need to explicitly put our app in the global
 // namespace.
 
 if (typeof exports !== 'undefined' && this.exports !== exports) {
-    global.myApp = myApp;
+    global.thisApps = thisApps;
 }
 
 // Event Model
 //------------
 
-myApp.Event = Backbone.Model.extend({
+thisApps.Event = Backbone.Model.extend({
     defaults: {
         start:    moment(),  // default start time is now
         end:      moment(),  // default end time is now
@@ -75,7 +75,7 @@ myApp.Event = Backbone.Model.extend({
 // View of Event as a List Item
 //-----------------------------
 
-myApp.EventAsListItem = Backbone.View.extend({
+thisApps.EventAsListItem = Backbone.View.extend({
     tagName:  "li",
     className: "event",
     template: _.template(
@@ -114,8 +114,8 @@ myApp.EventAsListItem = Backbone.View.extend({
 // Events Collection
 //------------------
 
-myApp.Events = Backbone.Collection.extend({
-    model: myApp.Event,
+thisApps.Events = Backbone.Collection.extend({
+    model: thisApps.Event,
     
     // In most browsers, the following URL will fetch a simple
     // JSON-formatted file from the server. If you're simply
@@ -360,7 +360,7 @@ myApp.Events = Backbone.Collection.extend({
 // View of Events as an Unordered List
 //------------------------------------
 
-myApp.EventsAsList = Backbone.View.extend({
+thisApps.EventsAsList = Backbone.View.extend({
     tagName: "ul",
     className: "events",
     initialize: function() {
@@ -385,7 +385,7 @@ myApp.EventsAsList = Backbone.View.extend({
     addOne: function(event) {
         if (event.get("start").isSame(this.options.date, "day")) {
             this.collection.layout(this.options.startTime, this.options.endTime);
-            var item = new myApp.EventAsListItem({model: event});
+            var item = new thisApps.EventAsListItem({model: event});
             item.render();
             // For the mobile view, we want to make sure the
             // new event is added in sorted order.
@@ -404,7 +404,7 @@ myApp.EventsAsList = Backbone.View.extend({
 // View for Legend Corresponding to Event List
 //--------------------------------------------
 
-myApp.EventListLegend = Backbone.View.extend({
+thisApps.EventListLegend = Backbone.View.extend({
     tagName: "ul",
     className: "legend",
     major_template: _.template(
@@ -495,9 +495,9 @@ myApp.EventListLegend = Backbone.View.extend({
 // Main view for the application
 //------------------------------
 
-myApp.MainView = Backbone.View.extend({
+thisApps.MainView = Backbone.View.extend({
     start: function() {
-        this.events = new myApp.Events();
+        this.events = new thisApps.Events();
         this.events.fetch();
         return this;
     },
@@ -519,7 +519,7 @@ myApp.MainView = Backbone.View.extend({
         // beacon `<div>`.
 
         if ($("#beacon").css("display") === "none") {
-            this.legend = new myApp.EventListLegend({
+            this.legend = new thisApps.EventListLegend({
                 date:       date.format("YYYY-MM-DD"),
                 startTime:  startTime,
                 endTime:    endTime,
@@ -530,7 +530,7 @@ myApp.MainView = Backbone.View.extend({
         }
         
         // Add the events themselves.
-        this.list = new myApp.EventsAsList({
+        this.list = new thisApps.EventsAsList({
             collection: this.events,
             date:       date.format("YYYY-MM-DD"),
             startTime:  startTime,
@@ -546,6 +546,6 @@ myApp.MainView = Backbone.View.extend({
 //----------------------
 
 $(function() {
-    myApp.main = new myApp.MainView({el: $("#myApp")});
-    myApp.main.start().render();
+    thisApps.main = new thisApps.MainView({el: $("#thisApps")});
+    thisApps.main.start().render();
 });

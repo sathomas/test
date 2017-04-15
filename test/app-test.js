@@ -22,14 +22,14 @@ var should = chai.should();
 
 describe("Application", function() {
     it("creates a global variable for the name space", function () {
-      should.exist(myApp);
+      should.exist(thisApps);
     })
 })
 
 describe("Event Model", function(){
     describe("Initialization", function() {
         beforeEach(function() {
-            this.event = new myApp.Event();
+            this.event = new thisApps.Event();
         })
         it("should default the title to an empty string",function() {
             this.event.get("title").should.equal("");
@@ -52,7 +52,7 @@ describe("Event Model", function(){
     })
     describe("Parsing", function() {
         beforeEach(function() {
-            this.event = new myApp.Event();
+            this.event = new thisApps.Event();
         })
         it("should convert minutes since 9:00am to a moment object", function() {
             var m = this.event.makeMoment(30);
@@ -89,7 +89,7 @@ describe("Event Model", function(){
 
 describe("Event List Item View", function() {
     beforeEach(function() {
-        this.event = new myApp.Event({
+        this.event = new thisApps.Event({
             title:    "Title",
             location: "Location",
             start:    moment("12-25-2012 10:00", "MM-DD-YYYY HH:mm"),
@@ -97,7 +97,7 @@ describe("Event List Item View", function() {
             width:    33,
             left:     66
         });
-        this.item = new myApp.EventAsListItem({model: this.event});
+        this.item = new thisApps.EventAsListItem({model: this.event});
     })
     it("render() should return the view object", function() {
         this.item.render().should.equal(this.item);
@@ -170,7 +170,7 @@ describe("Event List Item View", function() {
 
 describe("Events Collection", function() {
     it("should accept direct initialization of models", function() {
-        this.events = new myApp.Events([
+        this.events = new thisApps.Events([
             {id: 1, start: moment("12-25-2012 09:30", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 11:30", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
             {id: 2, start: moment("12-25-2012 18:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 19:00", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
             {id: 3, start: moment("12-25-2012 18:20", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 19:20", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
@@ -180,7 +180,7 @@ describe("Events Collection", function() {
     })
     describe("Layout Calculation", function() {
         it("should identify overlapping event times", function() {
-            this.events = new myApp.Events([
+            this.events = new thisApps.Events([
                 {id: 1, start: moment("12-25-2012 09:30", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 11:30", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
                 {id: 2, start: moment("12-25-2012 18:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 19:00", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
                 {id: 3, start: moment("12-25-2012 18:20", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 19:20", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
@@ -190,7 +190,7 @@ describe("Events Collection", function() {
             _(this.events.models).chain().pluck("attributes").pluck("width").value().should.eql([100,50,50,50])
         })
         it("should not overlap back-to-back events", function() {
-            this.events = new myApp.Events([
+            this.events = new thisApps.Events([
                 {id: 1, start: moment("12-25-2012 18:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 19:00", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
                 {id: 2, start: moment("12-25-2012 18:20", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 19:20", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
                 {id: 3, start: moment("12-25-2012 19:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 20:20", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"}
@@ -199,7 +199,7 @@ describe("Events Collection", function() {
             _(this.events.models).chain().pluck("attributes").pluck("width").value().should.eql([50,50,50])
         })
         it("should not overlap different days", function() {
-            this.events = new myApp.Events([
+            this.events = new thisApps.Events([
                 {id: 1, start: moment("12-25-2012 18:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 19:00", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
                 {id: 2, start: moment("12-25-2012 18:20", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 19:20", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
                 {id: 3, start: moment("12-25-2012 19:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 20:20", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
@@ -209,7 +209,7 @@ describe("Events Collection", function() {
             _(this.events.models).chain().pluck("attributes").pluck("width").value().should.eql([50,50,50,100])
         })
         it("should calculate positions", function() {
-            this.events = new myApp.Events([
+            this.events = new thisApps.Events([
                 {id: 1, start: moment("12-25-2012 18:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 19:00", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
                 {id: 2, start: moment("12-25-2012 18:20", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 19:20", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"}
             ]);
@@ -217,7 +217,7 @@ describe("Events Collection", function() {
             _(this.events.models).chain().pluck("attributes").pluck("left").value().should.eql([0,50])
         })
         it("should position earliest starting events first", function() {
-            this.events = new myApp.Events([
+            this.events = new thisApps.Events([
                 {id: 1, start: moment("12-25-2012 18:20", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 19:20", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
                 {id: 2, start: moment("12-25-2012 18:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 19:00", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"}
             ]);
@@ -225,7 +225,7 @@ describe("Events Collection", function() {
             _(this.events.models).chain().pluck("attributes").pluck("left").value().should.eql([50,0])
         })
         it("should fill in position gaps", function() {
-            this.events = new myApp.Events([
+            this.events = new thisApps.Events([
                 {id: 1, start: moment("12-25-2012 18:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 19:00", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
                 {id: 2, start: moment("12-25-2012 18:20", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 19:20", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
                 {id: 3, start: moment("12-25-2012 19:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 20:20", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"}
@@ -234,42 +234,42 @@ describe("Events Collection", function() {
             _(this.events.models).chain().pluck("attributes").pluck("left").value().should.eql([0,50,0])
         })
         it("should calculate event height", function() {
-            this.events = new myApp.Events([
+            this.events = new thisApps.Events([
                 {id: 1, start: moment("12-25-2012 12:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 18:00", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"}
             ]);
             this.events.layout("9:00","21:00");
             this.events.at(0).get("height").should.equal(50);
         })
         it("should calculate event vertical position", function() {
-            this.events = new myApp.Events([
+            this.events = new thisApps.Events([
                 {id: 1, start: moment("12-25-2012 12:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 18:00", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"}
             ]);
             this.events.layout("9:00","21:00");
             this.events.at(0).get("top").should.equal(25);
         })
         it("should calculate height for early events", function() {
-            this.events = new myApp.Events([
+            this.events = new thisApps.Events([
                 {id: 1, start: moment("12-25-2012 8:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 15:00", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"}
             ]);
             this.events.layout("9:00","21:00");
             this.events.at(0).get("height").should.equal(50);
         })
         it("should calculate vertical position for early events", function() {
-            this.events = new myApp.Events([
+            this.events = new thisApps.Events([
                 {id: 1, start: moment("12-25-2012 8:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 15:00", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"}
             ]);
             this.events.layout("9:00","21:00");
             this.events.at(0).get("top").should.equal(0);
         })
         it("should calculate height for late events", function() {
-            this.events = new myApp.Events([
+            this.events = new thisApps.Events([
                 {id: 1, start: moment("12-25-2012 15:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 22:00", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"}
             ]);
             this.events.layout("9:00","21:00");
             this.events.at(0).get("height").should.equal(50);
         })
         it("should calculate vertical position for late events", function() {
-            this.events = new myApp.Events([
+            this.events = new thisApps.Events([
                 {id: 1, start: moment("12-25-2012 15:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 22:00", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"}
             ]);
             this.events.layout("9:00","21:00");
@@ -280,13 +280,13 @@ describe("Events Collection", function() {
 
 describe("Events List View", function() {
     beforeEach(function(){
-        this.events = new myApp.Events([
+        this.events = new thisApps.Events([
             {id: 1, start: moment("12-25-2012 09:30", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 11:30", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
             {id: 2, start: moment("12-25-2012 18:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 19:00", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
             {id: 3, start: moment("12-25-2012 18:20", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 19:20", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
             {id: 4, start: moment("12-25-2012 19:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 20:20", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"}
         ]);
-        this.list = new myApp.EventsAsList({collection: this.events, date: "2012-12-25"});
+        this.list = new thisApps.EventsAsList({collection: this.events, date: "2012-12-25"});
     })
     it("render() should return the view object", function() {
         this.list.render().should.equal(this.list);
@@ -309,13 +309,13 @@ describe("Events List View", function() {
         this.list.$el.find("li").should.have.length(5);
     })
     it("should filter models based on date", function() {
-        this.events = new myApp.Events([
+        this.events = new thisApps.Events([
             {id: 1, start: moment("12-25-2012 09:30", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 11:30", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
             {id: 2, start: moment("12-25-2012 18:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 19:00", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
             {id: 3, start: moment("12-25-2012 18:20", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 19:20", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"},
             {id: 4, start: moment("12-26-2012 19:00", "MM-DD-YYYY HH:mm"), end: moment("12-25-2012 20:20", "MM-DD-YYYY HH:mm"), title: "Sample Title", location: "Sample Location"}
         ]);
-        this.list = new myApp.EventsAsList({collection: this.events, date: "2012-12-25"});
+        this.list = new thisApps.EventsAsList({collection: this.events, date: "2012-12-25"});
         this.list.render().$el.find("li").should.have.length(3);
     })
 })
